@@ -1,2 +1,2 @@
-export { NFTCard } from "./NFTCard";
-export { NFTCardItems } from "./NFTCardItems";
+export { NFTCard } from './NFTCard'
+export { NFTCardItems } from './NFTCardItems'

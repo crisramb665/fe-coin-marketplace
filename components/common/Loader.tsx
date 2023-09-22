@@ -1,14 +1,8 @@
-import Image from "next/image";
-import loaderSVG from '../../assets/rings.svg';
+import Image from 'next/image'
+import loaderSVG from '../../assets/rings.svg'
 
-export const Loader = ({ className, size }:{className:string, size:number}) => (    
+export const Loader = ({ className, size }: { className: string; size: number }) => (
   <div className={className}>
-    <Image
-     unoptimized
-     src={loaderSVG}
-     alt="Loading..."
-     layout='responsive'
-     width={size}
-     height={size}
-    />
- </div>); 
+    <Image unoptimized src={loaderSVG} alt="Loading..." layout="responsive" width={size} height={size} />
+  </div>
+)

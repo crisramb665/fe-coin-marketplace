@@ -1,10 +1,10 @@
-import { Header } from "../../components";
+import { Header } from '../../components'
 
 export const Layout = (props: { children: any }) => {
   return (
     <>
-      <Header/>
+      <Header />
       {props.children}
     </>
-  );
+  )
 }

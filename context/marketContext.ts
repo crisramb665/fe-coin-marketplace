@@ -1,6 +1,6 @@
-import { Contract } from "ethers";
-import { createContext } from "react";
-import { IMarketContext } from "./index";
+import { Contract } from 'ethers'
+import { createContext } from 'react'
+import { IMarketContext } from './index'
 
 export const contextDefaultValues: IMarketContext = {
   isConnected: false,
@@ -15,10 +15,9 @@ export const contextDefaultValues: IMarketContext = {
   filterNFT(searchText: string) {},
   resetNFTtems() {},
   getListingFee(marketContract: Contract): Promise<string> {
-    return new Promise(() => "");
+    return new Promise(() => '')
   },
   connectWallet() {},
-};
+}
 
-export const MarketContext =
-  createContext<IMarketContext>(contextDefaultValues);
+export const MarketContext = createContext<IMarketContext>(contextDefaultValues)

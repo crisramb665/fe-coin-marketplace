@@ -1,28 +1,28 @@
-import { NextPage } from "next";
-import Link from "next/link";
-import React, { useContext } from "react";
-import { MarketContext } from "../../context";
+import { NextPage } from 'next'
+import Link from 'next/link'
+import React, { useContext } from 'react'
+import { MarketContext } from '../../context'
 
 const styles = {
-  menu: "col-[4] flex items-center justify-around",
-  menuItemButton:
-    "bg-gradient-to-r from-[#1199fa] to-[#11d0fa] p-2 rounded-md cursor-pointer",
-  menuItemLink: "cursor-pointer hover:text-pink-600",
-};
+  menu: 'col-[4] flex items-center justify-around',
+  menuItemButton: 'bg-gradient-to-r from-[#1199fa] to-[#11d0fa] p-2 rounded-md cursor-pointer',
+  menuItemLink: 'cursor-pointer hover:text-pink-600',
+}
 
 export const NavMenu: NextPage = () => {
-  const { isConnected, connectWallet } = useContext(MarketContext);
+  const { isConnected, connectWallet } = useContext(MarketContext)
+
   return (
     <ul className={styles.menu}>
       <li>
         <Link href="/explore">
-          <a className={styles.menuItemLink}>Explore</a>
+          <a className={styles.menuItemLink}>Explorar</a>
         </Link>
       </li>
       {isConnected && (
         <li>
           <Link href="/create">
-            <a className={styles.menuItemButton}>Create</a>
+            <a className={styles.menuItemButton}>Publicar</a>
           </Link>
         </li>
       )}
@@ -33,14 +33,14 @@ export const NavMenu: NextPage = () => {
       <li>
         {!isConnected ? (
           <a className={styles.menuItemButton} onClick={connectWallet}>
-            Connect
+            Conectar wallet
           </a>
         ) : (
           <Link href="/dashboard">
-            <a className={styles.menuItemLink}>Dashboard</a>
+            <a className={styles.menuItemLink}>Panel de control</a>
           </Link>
         )}
       </li>
     </ul>
-  );
-};
+  )
+}
