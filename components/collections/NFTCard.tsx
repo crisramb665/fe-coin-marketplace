@@ -15,7 +15,7 @@ export const NFTCard: FC<ICoin> = (item: ICoin) => {
   const router = useRouter()
 
   const goTo = () => {
-    router.push(`/nft/${id}`)
+    router.push(`/coin/${id}`)
   }
 
   return (
