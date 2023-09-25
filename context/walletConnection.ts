@@ -8,7 +8,7 @@ export const connect = async (): Promise<providers.Web3Provider | undefined> => 
       providerOptions: {},
       theme: 'dark',
     })
-    console.log('web3Modal', web3Modal)
+    
     const web3ModalInstance = await web3Modal.connect()
     const web3ModalProvider = new providers.Web3Provider(web3ModalInstance)
     if (web3ModalProvider) {
@@ -17,7 +17,7 @@ export const connect = async (): Promise<providers.Web3Provider | undefined> => 
       return undefined
     }
   } catch (error) {
-    console.error('Wallet conn: ', error)
+    console.error('Conexión de wallet: ', error)
     return undefined
   }
 }

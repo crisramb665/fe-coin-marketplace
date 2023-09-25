@@ -29,7 +29,7 @@ const WalletConnect = () => {
 }
 
 const Create = () => {
-  const { isConnected, nftContract, marketContract, getListingFee } = useContext(MarketContext)
+  const { isConnected, marketContract, getListingFee, getNumberOfCoinsPublished } = useContext(MarketContext)
   const [fileUrl, setFileUrl] = useState<string>('')
   const [form, setForm] = useState<NFTForm>({
     price: '',
@@ -81,80 +81,83 @@ const Create = () => {
     }
   }
 
-  const createItem = async () => {
-    const { name, description, price } = form
-    if (!name || !description || !price || !fileUrl) {
-      toast.info('All form entries are required')
-      return
-    }
+  // const createItem = async () => {
+  //   const { name, description, price } = form
+  //   if (!name || !description || !price || !fileUrl) {
+  //     toast.info('All form entries are required')
+  //     return
+  //   }
 
-    try {
-      createSale()
-    } catch (error) {
-      console.log(`error Create item `, error)
-      toast.error('Create item fail.')
-    }
-  }
+  //   try {
+  //     createSale()
+  //   } catch (error) {
+  //     console.log(`error Create item `, error)
+  //     toast.error('Create item fail.')
+  //   }
+  // }
 
-  const createSale = async () => {
-    if (!nftContract || !marketContract) return
-    let toastTx = toast.loading('Please wait...', {
-      position: toast.POSITION.BOTTOM_RIGHT,
-    })
-    try {
-      setTxWait(true)
-      let transaction = await nftContract.createToken(fileUrl)
+  // const createSale = async () => {
+  //   if (!marketContract) return
+  //   let toastTx = toast.loading('Please wait...', {
+  //     position: toast.POSITION.BOTTOM_RIGHT,
+  //   })
+  //   try {
+  //     setTxWait(true)
+  //     let transaction = await nftContract.createToken(fileUrl)
 
-      let tx = await transaction.wait()
-      toast.update(toastTx, {
-        render: 'Tx Ok',
-        type: 'success',
-        isLoading: false,
-        autoClose: 3000,
-        position: toast.POSITION.BOTTOM_RIGHT,
-      })
+  //     let tx = await transaction.wait()
+  //     toast.update(toastTx, {
+  //       render: 'Tx Ok',
+  //       type: 'success',
+  //       isLoading: false,
+  //       autoClose: 3000,
+  //       position: toast.POSITION.BOTTOM_RIGHT,
+  //     })
 
-      let event = tx.events[0]
-      console.log('EVENT', event)
-      let value = event.args[2]
-      console.log('VALUE', value)
+  //     let event = tx.events[0]
+  //     console.log('EVENT', event)
+  //     let value = event.args[2]
+  //     console.log('VALUE', value)
 
-      let tokenId = value.toNumber()
-      console.log('TOKEN-ID', tokenId)
+  //     let tokenId = value.toNumber()
+  //     console.log('TOKEN-ID', tokenId)
 
-      const price = ethers.utils.parseUnits(form.price, 'ether')
-      toastTx = toast.loading('Please wait...', {
-        position: toast.POSITION.BOTTOM_RIGHT,
-      })
-      transaction = await marketContract.createMarketItem(nftContract.address, tokenId, price, { value: listingFee })
+  //     const price = ethers.utils.parseUnits(form.price, 'ether')
+  //     toastTx = toast.loading('Please wait...', {
+  //       position: toast.POSITION.BOTTOM_RIGHT,
+  //     })
+  //     transaction = await marketContract.createMarketItem(nftContract.address, tokenId, price, { value: listingFee })
 
-      tx = await transaction.wait()
-      toast.update(toastTx, {
-        render: 'Tx Ok',
-        type: 'success',
-        isLoading: false,
-        autoClose: 3000,
-        position: toast.POSITION.BOTTOM_RIGHT,
-      })
+  //     tx = await transaction.wait()
+  //     toast.update(toastTx, {
+  //       render: 'Tx Ok',
+  //       type: 'success',
+  //       isLoading: false,
+  //       autoClose: 3000,
+  //       position: toast.POSITION.BOTTOM_RIGHT,
+  //     })
 
-      router.push('/dashboard')
-    } catch (error) {
-      toast.update(toastTx, {
-        render: 'Something went wrong',
-        type: 'error',
-        isLoading: false,
-        autoClose: 3000,
-        position: toast.POSITION.BOTTOM_RIGHT,
-      })
-      setTxWait(false)
-    }
-  }
+  //     router.push('/dashboard')
+  //   } catch (error) {
+  //     toast.update(toastTx, {
+  //       render: 'Something went wrong',
+  //       type: 'error',
+  //       isLoading: false,
+  //       autoClose: 3000,
+  //       position: toast.POSITION.BOTTOM_RIGHT,
+  //     })
+  //     setTxWait(false)
+  //   }
+  // }
 
   useEffect(() => {
+    console.log('market contract????', marketContract)
     if (!marketContract) return
     ;(async () => {
-      const fee = await getListingFee(marketContract)
-      setListingFee(fee)
+      // // const fee = await getListingFee(marketContract)
+      // // setListingFee(fee)
+      // const numberOfCoinsPublished = await getNumberOfCoinsPublished(marketContract)
+      // console.log('numberOfCoinsPublished', numberOfCoinsPublished)
     })()
   }, [])
 
@@ -201,7 +204,8 @@ const Create = () => {
                 )}
                 {!txWait ? (
                   <button
-                    onClick={createItem}
+                    // onClick={createItem}
+                    onClick={() => console.log("creando listing en proceso")}
                     className="font-bold mt-4 bg-gradient-to-r from-[#1199fa] to-[#11d0fa]  rounded-md text-white  p-4 shadow-lg"
                   >
                     Publicar

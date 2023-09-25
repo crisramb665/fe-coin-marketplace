@@ -31,7 +31,7 @@ const NFTS: FC<INFTComponent> = ({ NFTs, title, isLoading }) => {
 }
 
 const Dashboard: NextPage = () => {
-  const { signer, marketContract, nftContract, web3Provider, isConnected } = useContext(MarketContext)
+  const { signer, marketContract, web3Provider, isConnected } = useContext(MarketContext)
   const [isLoading, setIsLoading] = useState(false)
   const [nftButtons, setNftButtons] = useState<ButtonGroupItemType[]>(NFTButtonGroup)
   const [balance, setBalance] = useState<string>('0')
@@ -50,21 +50,21 @@ const Dashboard: NextPage = () => {
 
   useEffect(() => {
     getNFTs()
-  }, [signer, marketContract, nftContract])
+  }, [signer, marketContract])
 
   const getNFTs = async () => {
-    if (!marketContract || !nftContract || !signer) return
+    if (!marketContract || !signer) return
     try {
       setIsLoading(true)
       const itemsBySeller = await getNFTBySeller(marketContract!)
-      const items = await getItems(nftContract!, itemsBySeller)
+      const items = await getItems(marketContract, itemsBySeller)
       setNFTItems(items)
       setIsLoading(false)
       setCurrentNFTItems(items)
     } catch (error) {
       console.error(error)
       setIsLoading(false)
-      toast.error('There was an error')
+      toast.error('Hubo un error')
     }
   }
 
@@ -74,7 +74,7 @@ const Dashboard: NextPage = () => {
       if (!shoppingNFTItems) {
         setIsLoading(true)
         const itemsByOwner = await getNFTByOwner(marketContract!)
-        const items = await getItems(nftContract!, itemsByOwner)
+        const items = await getItems(marketContract, itemsByOwner)
         setShoppingNFTItems(items)
         setIsLoading(false)
         setCurrentNFTItems(items)
@@ -84,7 +84,7 @@ const Dashboard: NextPage = () => {
     } catch (error) {
       console.error(error)
       setIsLoading(false)
-      toast.error('There was an error')
+      toast.error('Hubo un error')
     }
   }
 

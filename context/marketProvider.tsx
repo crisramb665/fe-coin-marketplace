@@ -2,7 +2,16 @@ import { Contract, ethers, providers } from 'ethers'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
-import { MarketContext, getMarketContract, getNFTContract, getListingFee, getItems, IItem } from './index'
+import {
+  MarketContext,
+  getMarketContract,
+  getListingFee,
+  getItems,
+  IItem,
+  getNumberOfCoinsPublished,
+  getCoinInfo,
+  getCoinsPerUser,
+} from './index'
 import { getMarketItems, getTotalItems } from './marketContract'
 import { connect } from './walletConnection'
 interface Props {
@@ -11,14 +20,14 @@ interface Props {
 
 type InitialStateType = {
   marketContract: Contract
-  nftContract: Contract
+  // nftContract: Contract
   account: string
   web3Provider: providers.Web3Provider
 }
 
 export const MarketProvider = ({ children }: Props) => {
   const [marketContract, setMarketContract] = useState<Contract | null>(null)
-  const [nftContract, setNftContract] = useState<Contract | null>(null)
+  // const [nftContract, setNftContract] = useState<Contract | null>(null)
   const [isConnected, setIsConnected] = useState(false)
   const [web3Provider, setWeb3Provider] = useState<providers.Web3Provider | undefined>(undefined)
   const [signer, setSigner] = useState<string | undefined>(undefined)
@@ -33,7 +42,7 @@ export const MarketProvider = ({ children }: Props) => {
     window.ethereum.on('accountsChanged', async () => {
       setIsConnected(false)
       setWeb3Provider(undefined)
-      setNftContract(null)
+      // setNftContract(null)
       setMarketContract(null)
       setSigner(undefined)
       setNFTMarketItems([])
@@ -48,60 +57,60 @@ export const MarketProvider = ({ children }: Props) => {
     try {
       if (typeof window != 'undefined' && typeof window.ethereum != 'undefined' && window.ethereum.isMetaMask) {
         const web3Provider = await connect()
-        console.log('web3Provider', web3Provider)
+
         if (!web3Provider) {
-          toast.error('An error was ocurred when try to connect your wallet')
+          toast.error('Hubo un error al conectar la wallet, verifica que hayas iniciado sesión en metamask')
           return
         }
         const { chainId } = await web3Provider.getNetwork()
-        console.log('chainId', chainId)
-        if (chainId !== 80001) {
-          window.alert('Change your network to Mumbai Testnet or Local HardHat')
-          throw new Error('Change your network to Mumbai Testnet or Local HardHat')
+        console.log('chainId mp', chainId)
+        if (chainId !== 11155111) {
+          window.alert('Cambia tu red a Sepolia Testnet')
+          throw new Error('Cambia tu red a Sepolia Testnet')
         }
         const signer = web3Provider.getSigner()
         console.log('signer', signer)
         const accounts = await signer.provider.listAccounts()
         console.log('accounts', accounts)
         const marketContract = await getMarketContract(web3Provider, signer)
-        const nftContract = await getNFTContract(web3Provider, signer)
+        // const nftContract = await getNFTContract(web3Provider, signer)
         setInitialState({
           web3Provider,
           account: accounts[0],
           marketContract,
-          nftContract,
+          // nftContract,
         })
       } else {
-        toast.info('Please install metamask!')
+        toast.info('Por favor instala Metamask!')
       }
     } catch (error) {
-      console.error(' error', error)
-      toast.error('An error was ocurred when try to connect your wallet')
+      console.error('error, what is the error: ', error)
+      toast.error('Hubo un error al conectar la wallet, verifica que tengas instalado metamask y hayas iniciado sesión')
     }
   }
 
-  const setInitialState = async ({ marketContract, nftContract, account, web3Provider }: InitialStateType) => {
+  const setInitialState = async ({ marketContract, account, web3Provider }: InitialStateType) => {
     setWeb3Provider(web3Provider)
     setSigner(account)
     setIsConnected(true)
     setMarketContract(marketContract)
-    setNftContract(nftContract)
+    // setNftContract(nftContract)
     providerEvents()
   }
 
   const getMarketPlaceItems = async () => {
     const provider = new ethers.providers.JsonRpcProvider(process.env.NEXT_PUBLIC_VERCEL_RPC_URL)
     const marketContract = await getMarketContract(provider)
-    const nftContract = await getNFTContract(provider)
+    // const nftContract = await getNFTContract(provider)
     if (!marketContract) return
-    if (!nftContract) return
+    // if (!nftContract) return
     const total = await getTotalItems(marketContract)
     if (total <= NFTMarketItems.length) return
     const nfts = await getMarketItems({
       marketContract: marketContract,
     })
-    const genItems = await getItems(nftContract, nfts)
-    await setNFTMarketItems((prev: IItem[]) => genItems)
+    // const genItems = await getItems(nftContract, nfts)
+    // await setNFTMarketItems((prev: IItem[]) => genItems)
   }
 
   const resetNFTtems = async () => {
@@ -126,7 +135,7 @@ export const MarketProvider = ({ children }: Props) => {
         isConnected,
         web3Provider,
         signer,
-        nftContract,
+        // nftContract,
         marketContract,
         NFTFilterItems,
         totalNFTItems,
@@ -136,6 +145,9 @@ export const MarketProvider = ({ children }: Props) => {
         getMarketPlaceItems,
         getListingFee,
         connectWallet,
+        getNumberOfCoinsPublished,
+        getCoinInfo,
+        getCoinsPerUser,
       }}
     >
       {children}

@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { BigNumber, Contract, ethers } from 'ethers'
-import { IItem, IMetaData } from '../interfaces'
+import { ICoin, ICoinFeatures, IItem, IMetaData } from '../interfaces'
 
 const defaultItem = {
   itemId: '',
@@ -13,6 +13,16 @@ const defaultItem = {
   description: '',
   name: '',
   createAt: '',
+}
+
+const defaultCoinInfo = {
+  coinId: 0,
+  name: '',
+  price: 0 as unknown as BigNumber,
+  supply: 0,
+  seller: '',
+  features: {} as ICoinFeatures,
+  status: 0,
 }
 
 export const getListingFee = async (marketContract: Contract): Promise<string> => {
@@ -51,38 +61,49 @@ export const getMarketItems = async ({ marketContract }: { marketContract: Contr
   return await marketContract.getMarketItems()
 }
 
-export const getItems = async (nftContract: Contract, data: any[]): Promise<IItem[]> => {
-  const items: IItem[] = await Promise.all(
-    data.map(async (i: IItem) => {
-      return await generateItem(i, nftContract)
+export const getCoins = async (marketContract: Contract, data: any[]): Promise<ICoin[]> => {
+  const coins: ICoin[] = await Promise.all(
+    data.map(async (i: ICoin) => {
+      return await generateCoin(i, marketContract)
     }),
   )
 
-  return items.filter((item: IItem) => item.tokenId.toString() !== '0')
+  return coins.filter((coin: ICoin) => coin.coinId.toString() !== '0')
 }
 
-export const generateItem = async (item: IItem, nftContract: Contract): Promise<IItem> => {
-  if (item.tokenId.toString() === '0') {
-    return defaultItem
-  }
-  const tokenUri = await nftContract.tokenURI(item.tokenId)
-  const [path, file] = tokenUri.slice(7).split('/')
-  const ipfsUri = `https://${path}.ipfs.dweb.link/${file}`
-  const meta = await axios.get(ipfsUri)
-  const price = ethers.utils.formatUnits(item.price.toString(), 'ether')
-  const { name, description, image }: IMetaData = meta.data
+export const generateCoin = async (coin: ICoin, marketContract: Contract): Promise<ICoin> => {
+  // if (coin.coinId.toString() === '0') {
+  //   return defaultCoinInfo
+  // }
+  // const tokenUri = await marketContract.tokenURI(coin.tokenId)
+  // const [path, file] = tokenUri.slice(7).split('/')
+  // const ipfsUri = `https://${path}.ipfs.dweb.link/${file}`
+  // const meta = await axios.get(ipfsUri)
+  const price = ethers.utils.formatUnits(coin.price, 'ether')
+  // const { name, description, image }: IMetaData = meta.data
+
   return {
-    itemId: item.itemId,
+    coinId: coin.coinId,
+    name: coin.name,
     price,
-    tokenId: item.tokenId,
-    seller: item.seller,
-    owner: item.owner,
-    sold: item.sold,
-    image: `https://ipfs.io/ipfs/${image.slice(7)}`,
-    description,
-    name,
-    createAt: item.createAt.toString(),
+    supply: coin.supply,
+    seller: coin.seller,
+    features: coin.features,
+    status: coin.status,
   }
+
+  // return {
+  //   itemId: coin.itemId,
+  //   price,
+  //   tokenId: coin.tokenId,
+  //   seller: coin.seller,
+  //   owner: coin.owner,
+  //   sold: coin.sold,
+  //   image: `https://ipfs.io/ipfs/${image.slice(7)}`,
+  //   description,
+  //   name,
+  //   createAt: coin.createAt.toString(),
+  // }
 }
 
 export const getSoldNFT = (items: IItem[]): IItem[] => {
@@ -112,4 +133,35 @@ export const buyNFT = async ({
     console.log('error tx ', error)
     return null
   }
+}
+
+export const getNumberOfCoinsPublished = async (marketContract: Contract) => {
+  const numberOfCoinsPublished = await marketContract.getNumberOfCoinsPublished()
+  return numberOfCoinsPublished
+}
+
+export const getCoinInfo = async (marketContract: Contract, coinId: number): Promise<ICoin> => {
+  const coinInfo = await marketContract.getCoinInfo(coinId)
+
+  const coin: ICoin = {
+    coinId: coinInfo[0].toNumber(),
+    name: coinInfo[1],
+    price: coinInfo[2],
+    supply: coinInfo[3],
+    seller: coinInfo[4],
+    features: {
+      mintingYear: coinInfo[5][0],
+      material: coinInfo[5][1],
+      origin: coinInfo[5][2],
+      stateOfUse: coinInfo[5][3],
+    },
+    status: coinInfo[6],
+  }
+
+  return coin
+}
+
+export const getCoinsPerUser = async (marketContract: Contract, user: string): Promise<BigNumber[]> => {
+  const coinsPerUser = await marketContract.getCoinInfoPerUser(user)
+  return coinsPerUser
 }

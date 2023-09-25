@@ -7,27 +7,29 @@ import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { ExternalLinkIcon, XIcon } from '@heroicons/react/solid'
 import { Loader } from '../../../../components/common'
-import { generateItem, getMarketContract, getNFTContract, IItem } from '../../../../context'
+import { generateCoin, getMarketContract, getCoinInfo, ICoin } from '../../../../context'
 import { DATA_URL } from '../../../../utils'
 
-const NFTDetails: NextPage = () => {
-  const [nft, setNft] = useState<IItem | undefined>(undefined)
+const CoinDetails: NextPage = () => {
+  const [coin, setCoin] = useState<ICoin | undefined>(undefined)
   const [fullImage, setFullImage] = useState(false)
   const router = useRouter()
   const { id } = router.query
+  const idAsNumber = Number(id)
 
   useEffect(() => {
     if (id) {
       ;(async () => {
         const provider = new ethers.providers.JsonRpcProvider(process.env.NEXT_PUBLIC_VERCEL_RPC_URL)
         const marketContract = await getMarketContract(provider)
-        const nftContract = await getNFTContract(provider)
-        const item = await marketContract.getItemById(parseInt(id as string))
-        const newItem = await generateItem(item, nftContract)
-        setNft(newItem)
+        // const nftContract = await getNFTContract(provider)
+        // const coin = await marketContract.getItemById(parseInt(id as string))
+        const coin = await getCoinInfo(marketContract, idAsNumber)
+        const newCoin = await generateCoin(coin, marketContract)
+        setCoin(newCoin)
       })()
     }
-  }, [id])
+  }, [id, idAsNumber])
 
   const getFormatDate = (unformatDate: string): string => {
     const date = new Date(parseInt(unformatDate) * 1000)
@@ -41,7 +43,7 @@ const NFTDetails: NextPage = () => {
         <meta name="description" content="NFT Details" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      {!nft ? (
+      {!coin ? (
         <Loader className="w-[500px] h-[500px] mx-auto my-0 py-5" size={500} />
       ) : (
         <section className="w-[80%] mx-auto my-0">
@@ -49,74 +51,74 @@ const NFTDetails: NextPage = () => {
           <div className="grid grid-cols-[1fr_350px] gap-[20px] justify-center items-center">
             <div>
               <h4 className="py-3">
-                <span className="bold text-pink-600 text-lg">ID:</span> {ethers.BigNumber.from(nft.itemId).toNumber()}
+                <span className="bold text-pink-600 text-lg">ID:</span> {ethers.BigNumber.from(coin.coinId).toNumber()}
               </h4>
               <h4 className="py-3">
-                <span className="bold text-pink-600 text-lg">Nombre:</span> {nft.name}
+                <span className="bold text-pink-600 text-lg">Nombre:</span> {coin.name}
               </h4>
               <h4 className="py-3">
-                <span className="bold text-pink-600 text-lg">Precio:</span> {nft.price} eth
+                <span className="bold text-pink-600 text-lg">Precio:</span> {Number(coin.price)} eth
               </h4>
               <h4 className="py-3 flex items-center">
                 <span className="bold text-pink-600 text-lg pr-2">Vendedor:</span>
                 <a
                   className="text-blue-500 flex"
                   target="_blank"
-                  href={`https://mumbai.polygonscan.com/address/${nft.seller}`}
+                  href={`https://sepolia.etherscan.io/address/${coin.seller}`}
                   rel="noreferrer"
                 >
                   {' '}
-                  <span>{nft.seller}</span> <ExternalLinkIcon className="w-5 h-5" />
+                  <span>{coin.seller}</span> <ExternalLinkIcon className="w-5 h-5" />
                 </a>
               </h4>
+              {/* <h4 className="py-3">
+                <span className="bold text-pink-600 text-lg">Fecha de publicación:</span> {getFormatDate(coin.createAt)}
+              </h4> */}
               <h4 className="py-3">
-                <span className="bold text-pink-600 text-lg">Fecha de publicación:</span> {getFormatDate(nft.createAt)}
-              </h4>
-              <h4 className="py-3">
-                <span className="bold text-pink-600 text-lg">Año de acuñación:</span> {nft.description}
+                <span className="bold text-pink-600 text-lg">Año de acuñación:</span> {coin.features.mintingYear}
               </h4>
               {/* <h4 className="py-3 flex items-center">
                 <span className="bold text-pink-600 text-lg pr-2">Owner:</span>
-                {nft.sold ? (
+                {coin.sold ? (
                   <a
                     className="text-blue-500 flex"
                     target="_blank"
-                    href={`https://mumbai.polygonscan.com/address/${nft.owner}`}
+                    href={`https://sepolia.etherscan.io/address/${coin.owner}`}
                     rel="noreferrer"
                   >
                     {' '}
-                    <span>{nft.owner}</span> <ExternalLinkIcon className="w-5 h-5" />
+                    <span>{coin.owner}</span> <ExternalLinkIcon className="w-5 h-5" />
                   </a>
                 ) : (
-                  <>{nft.owner}</>
+                  <>{coin.owner}</>
                 )}
               </h4> */}
 
               <h4 className="py-3">
-                <span className="bold text-pink-600 text-lg">Material:</span> {nft.sold ? 'sold out' : 'unsold'}
+                <span className="bold text-pink-600 text-lg">Material:</span> {coin.status === 0 ? 'Disponible' : 'Vendida'}
               </h4>
               <h4 className="py-3">
                 <span className="bold text-pink-600 text-lg">Origen:</span>{' '}
-                {ethers.BigNumber.from(nft.tokenId).toNumber()}
+                {ethers.BigNumber.from(coin.coinId).toNumber()}
               </h4>
-              <h4 className="py-3">
+              {/* <h4 className="py-3">
                 <span className="bold text-pink-600 text-lg">Estado Físico:</span>{' '}
-                <a className="text-blue-500" target="_blank" href={nft.image} rel="noreferrer">
-                  {nft.image}
+                <a className="text-blue-500" target="_blank" href={coin.image} rel="noreferrer">
+                  {coin.image}
                 </a>
-              </h4>
-              <h4 className="py-3">
+              </h4> */}
+              {/* <h4 className="py-3">
                 <span className="bold text-pink-600 text-lg">Status:</span>{' '}
-                <a className="text-blue-500" target="_blank" href={nft.image} rel="noreferrer">
-                  {nft.image}
+                <a className="text-blue-500" target="_blank" href={coin.image} rel="noreferrer">
+                  {coin.image}
                 </a>
-              </h4>
+              </h4> */}
             </div>
             <div className="flex flex-col ">
-              <div className="w-[350px] h-[350px] cursor-pointer hover:opacity-80" onClick={() => setFullImage(true)}>
+              {/* <div className="w-[350px] h-[350px] cursor-pointer hover:opacity-80" onClick={() => setFullImage(true)}>
                 <Image
                   unoptimized
-                  src={nft!.image}
+                  src={coin!.image}
                   alt="Picture of the author"
                   className="rounded-2xl mt-4"
                   layout="responsive"
@@ -125,15 +127,15 @@ const NFTDetails: NextPage = () => {
                   blurDataURL={DATA_URL}
                   placeholder="blur"
                 />
-              </div>
-              <Link href={`/nft/${id}`}>
+              </div> */}
+              <Link href={`/coin/${id}`}>
                 <div className="bg-gradient-to-r from-[#1199fa] to-[#11d0fa] rounded-3xl w-[300px] p-3 cursor-pointer mx-auto my-3">
                   <h4 className="text-center text-xl">Ver en marketplace</h4>
                 </div>
               </Link>
             </div>
           </div>
-          {fullImage && (
+          {/* {fullImage && (
             <div className="w-[100%] h-[100%] bg-[#000000a8] absolute top-0 left-0">
               <div className="w-[800px] h-[800px] absolute translate-x-[-50%] translate-y-[-50%] left-[50%] top-[50%]">
                 <XIcon
@@ -142,7 +144,7 @@ const NFTDetails: NextPage = () => {
                 />
                 <Image
                   unoptimized
-                  src={nft!.image}
+                  src={coin!.image}
                   alt="Picture of the author"
                   className="rounded-2xl mt-4"
                   layout="responsive"
@@ -153,11 +155,11 @@ const NFTDetails: NextPage = () => {
                 />
               </div>
             </div>
-          )}
+          )} */}
         </section>
       )}
     </div>
   )
 }
 
-export default NFTDetails
+export default CoinDetails

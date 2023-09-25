@@ -1,6 +1,6 @@
 {
-  "31337": {
-    "address": "0x5FbDB2315678afecb367f032d93F642f64180aa3",
+  "80001": {
+    "address": "0x900FBb08faB3CBf9cEA3d84d357DA900875684eC",
     "abi": [
       {
         "type": "constructor",
@@ -510,514 +510,907 @@
       }
     ]
   },
-  "80001": {
-    "address": "0x900FBb08faB3CBf9cEA3d84d357DA900875684eC",
+  "11155111": {
+    "address": "0x6927beacc64f62df7fc86b64d4d5da379b50c2dd",
     "abi": [
       {
-        "type": "constructor",
-        "payable": false,
-        "inputs": []
-      },
-      {
-        "type": "error",
-        "name": "NFTMarket__ItemId",
         "inputs": [
           {
-            "type": "string",
-            "name": "message"
-          }
-        ]
-      },
-      {
-        "type": "error",
-        "name": "NFTMarket__ListingFee",
-        "inputs": [
-          {
-            "type": "uint256",
-            "name": "requiered"
-          },
-          {
-            "type": "string",
-            "name": "message"
-          }
-        ]
-      },
-      {
-        "type": "error",
-        "name": "NFTMarket__Price",
-        "inputs": [
-          {
-            "type": "string",
-            "name": "message"
-          }
-        ]
-      },
-      {
-        "type": "error",
-        "name": "NFTMarket__SetListingFee",
-        "inputs": [
-          {
-            "type": "string",
-            "name": "message"
-          }
-        ]
-      },
-      {
-        "type": "event",
-        "anonymous": false,
-        "name": "marketItemNFT",
-        "inputs": [
-          {
-            "type": "uint256",
-            "name": "itemId",
-            "indexed": true
-          },
-          {
-            "type": "address",
-            "name": "nftContract",
-            "indexed": true
-          },
-          {
-            "type": "uint256",
-            "name": "tokenId",
-            "indexed": true
-          },
-          {
-            "type": "address",
-            "name": "seller",
-            "indexed": false
-          },
-          {
-            "type": "address",
-            "name": "owner",
-            "indexed": false
-          },
-          {
-            "type": "uint256",
-            "name": "price",
-            "indexed": false
-          },
-          {
-            "type": "uint256",
-            "name": "createAt",
-            "indexed": false
-          },
-          {
-            "type": "bool",
-            "name": "sold",
-            "indexed": false
-          }
-        ]
-      },
-      {
-        "type": "function",
-        "name": "buyNFT",
-        "constant": false,
-        "stateMutability": "payable",
-        "payable": true,
-        "inputs": [
-          {
-            "type": "address",
-            "name": "nftContract"
-          },
-          {
-            "type": "uint256",
-            "name": "itemId"
-          }
-        ],
-        "outputs": []
-      },
-      {
-        "type": "function",
-        "name": "createMarketItem",
-        "constant": false,
-        "stateMutability": "payable",
-        "payable": true,
-        "inputs": [
-          {
-            "type": "address",
-            "name": "nftContract"
-          },
-          {
-            "type": "uint256",
-            "name": "tokenId"
-          },
-          {
-            "type": "uint256",
-            "name": "price"
-          }
-        ],
-        "outputs": []
-      },
-      {
-        "type": "function",
-        "name": "fetchMarketItems",
-        "constant": true,
-        "stateMutability": "view",
-        "payable": false,
-        "inputs": [
-          {
-            "type": "uint256",
-            "name": "offset"
-          },
-          {
-            "type": "uint256",
-            "name": "limit"
-          },
-          {
-            "type": "uint256",
-            "name": "sold"
-          }
-        ],
-        "outputs": [
-          {
-            "type": "tuple[]",
-            "components": [
-              {
-                "type": "uint256",
-                "name": "itemId"
-              },
-              {
-                "type": "address",
-                "name": "nftContract"
-              },
-              {
-                "type": "uint256",
-                "name": "tokenId"
-              },
-              {
-                "type": "address",
-                "name": "seller"
-              },
-              {
-                "type": "address",
-                "name": "owner"
-              },
-              {
-                "type": "uint256",
-                "name": "price"
-              },
-              {
-                "type": "uint256",
-                "name": "createAt"
-              },
-              {
-                "type": "bool",
-                "name": "sold"
-              }
-            ]
-          },
-          {
-            "type": "uint256",
-            "name": "nextOffset"
-          },
-          {
-            "type": "uint256",
-            "name": "totalSolded"
-          }
-        ]
-      },
-      {
-        "type": "function",
-        "name": "fetchMarketItemsByTime",
-        "constant": true,
-        "stateMutability": "view",
-        "payable": false,
-        "inputs": [
-          {
-            "type": "uint256",
-            "name": "time"
-          },
-          {
-            "type": "uint256",
-            "name": "limit"
-          }
-        ],
-        "outputs": [
-          {
-            "type": "tuple[]",
-            "components": [
-              {
-                "type": "uint256",
-                "name": "itemId"
-              },
-              {
-                "type": "address",
-                "name": "nftContract"
-              },
-              {
-                "type": "uint256",
-                "name": "tokenId"
-              },
-              {
-                "type": "address",
-                "name": "seller"
-              },
-              {
-                "type": "address",
-                "name": "owner"
-              },
-              {
-                "type": "uint256",
-                "name": "price"
-              },
-              {
-                "type": "uint256",
-                "name": "createAt"
-              },
-              {
-                "type": "bool",
-                "name": "sold"
-              }
-            ]
-          }
-        ]
-      },
-      {
-        "type": "function",
-        "name": "getItemById",
-        "constant": true,
-        "stateMutability": "view",
-        "payable": false,
-        "inputs": [
-          {
-            "type": "uint256",
-            "name": "_id"
-          }
-        ],
-        "outputs": [
-          {
-            "type": "tuple",
-            "components": [
-              {
-                "type": "uint256",
-                "name": "itemId"
-              },
-              {
-                "type": "address",
-                "name": "nftContract"
-              },
-              {
-                "type": "uint256",
-                "name": "tokenId"
-              },
-              {
-                "type": "address",
-                "name": "seller"
-              },
-              {
-                "type": "address",
-                "name": "owner"
-              },
-              {
-                "type": "uint256",
-                "name": "price"
-              },
-              {
-                "type": "uint256",
-                "name": "createAt"
-              },
-              {
-                "type": "bool",
-                "name": "sold"
-              }
-            ]
-          }
-        ]
-      },
-      {
-        "type": "function",
-        "name": "getListingFee",
-        "constant": true,
-        "stateMutability": "view",
-        "payable": false,
-        "inputs": [],
-        "outputs": [
-          {
+            "internalType": "uint256",
+            "name": "_fee",
             "type": "uint256"
           }
-        ]
+        ],
+        "stateMutability": "nonpayable",
+        "type": "constructor"
       },
       {
-        "type": "function",
-        "name": "getMarketItems",
-        "constant": true,
-        "stateMutability": "view",
-        "payable": false,
         "inputs": [],
-        "outputs": [
-          {
-            "type": "tuple[]",
-            "components": [
-              {
-                "type": "uint256",
-                "name": "itemId"
-              },
-              {
-                "type": "address",
-                "name": "nftContract"
-              },
-              {
-                "type": "uint256",
-                "name": "tokenId"
-              },
-              {
-                "type": "address",
-                "name": "seller"
-              },
-              {
-                "type": "address",
-                "name": "owner"
-              },
-              {
-                "type": "uint256",
-                "name": "price"
-              },
-              {
-                "type": "uint256",
-                "name": "createAt"
-              },
-              {
-                "type": "bool",
-                "name": "sold"
-              }
-            ]
-          }
-        ]
+        "name": "CoinDoesNotExist",
+        "type": "error"
       },
       {
-        "type": "function",
-        "name": "getNFTByOwner",
-        "constant": true,
-        "stateMutability": "view",
-        "payable": false,
         "inputs": [],
-        "outputs": [
-          {
-            "type": "tuple[]",
-            "components": [
-              {
-                "type": "uint256",
-                "name": "itemId"
-              },
-              {
-                "type": "address",
-                "name": "nftContract"
-              },
-              {
-                "type": "uint256",
-                "name": "tokenId"
-              },
-              {
-                "type": "address",
-                "name": "seller"
-              },
-              {
-                "type": "address",
-                "name": "owner"
-              },
-              {
-                "type": "uint256",
-                "name": "price"
-              },
-              {
-                "type": "uint256",
-                "name": "createAt"
-              },
-              {
-                "type": "bool",
-                "name": "sold"
-              }
-            ]
-          }
-        ]
+        "name": "InvalidAddressProvided",
+        "type": "error"
       },
       {
-        "type": "function",
-        "name": "getNFTBySeller",
-        "constant": true,
-        "stateMutability": "view",
-        "payable": false,
-        "inputs": [],
-        "outputs": [
-          {
-            "type": "tuple[]",
-            "components": [
-              {
-                "type": "uint256",
-                "name": "itemId"
-              },
-              {
-                "type": "address",
-                "name": "nftContract"
-              },
-              {
-                "type": "uint256",
-                "name": "tokenId"
-              },
-              {
-                "type": "address",
-                "name": "seller"
-              },
-              {
-                "type": "address",
-                "name": "owner"
-              },
-              {
-                "type": "uint256",
-                "name": "price"
-              },
-              {
-                "type": "uint256",
-                "name": "createAt"
-              },
-              {
-                "type": "bool",
-                "name": "sold"
-              }
-            ]
-          }
-        ]
-      },
-      {
-        "type": "function",
-        "name": "getOwner",
-        "constant": true,
-        "stateMutability": "view",
-        "payable": false,
-        "inputs": [],
-        "outputs": [
-          {
-            "type": "address"
-          }
-        ]
-      },
-      {
-        "type": "function",
-        "name": "getTotalItems",
-        "constant": true,
-        "stateMutability": "view",
-        "payable": false,
-        "inputs": [],
-        "outputs": [
-          {
-            "type": "uint256",
-            "name": "total"
-          }
-        ]
-      },
-      {
-        "type": "function",
-        "name": "setListingFee",
-        "constant": false,
-        "payable": false,
         "inputs": [
           {
-            "type": "uint256",
-            "name": "_price"
+            "internalType": "address",
+            "name": "user",
+            "type": "address"
           }
         ],
-        "outputs": []
+        "name": "NotAuthorized",
+        "type": "error"
+      },
+      {
+        "anonymous": false,
+        "inputs": [
+          {
+            "indexed": false,
+            "internalType": "uint256",
+            "name": "coinId",
+            "type": "uint256"
+          }
+        ],
+        "name": "CoinDeleted",
+        "type": "event"
+      },
+      {
+        "anonymous": false,
+        "inputs": [
+          {
+            "indexed": false,
+            "internalType": "uint256",
+            "name": "coinId",
+            "type": "uint256"
+          }
+        ],
+        "name": "CoinListed",
+        "type": "event"
+      },
+      {
+        "anonymous": false,
+        "inputs": [
+          {
+            "indexed": false,
+            "internalType": "uint256",
+            "name": "coinId",
+            "type": "uint256"
+          }
+        ],
+        "name": "CoinModified",
+        "type": "event"
+      },
+      {
+        "anonymous": false,
+        "inputs": [
+          {
+            "indexed": true,
+            "internalType": "address",
+            "name": "previousOwner",
+            "type": "address"
+          },
+          {
+            "indexed": true,
+            "internalType": "address",
+            "name": "newOwner",
+            "type": "address"
+          }
+        ],
+        "name": "OwnershipTransferred",
+        "type": "event"
+      },
+      {
+        "anonymous": false,
+        "inputs": [
+          {
+            "indexed": false,
+            "internalType": "uint256",
+            "name": "coinId",
+            "type": "uint256"
+          }
+        ],
+        "name": "TradeCompleted",
+        "type": "event"
+      },
+      {
+        "anonymous": false,
+        "inputs": [
+          {
+            "indexed": false,
+            "internalType": "uint256",
+            "name": "coinId",
+            "type": "uint256"
+          },
+          {
+            "indexed": false,
+            "internalType": "address",
+            "name": "buyer",
+            "type": "address"
+          }
+        ],
+        "name": "TradeInitiated",
+        "type": "event"
+      },
+      {
+        "stateMutability": "payable",
+        "type": "fallback"
+      },
+      {
+        "inputs": [],
+        "name": "DELIVERY_DEADLINE",
+        "outputs": [
+          {
+            "internalType": "uint256",
+            "name": "",
+            "type": "uint256"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "inputs": [],
+        "name": "NAME",
+        "outputs": [
+          {
+            "internalType": "string",
+            "name": "",
+            "type": "string"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "inputs": [],
+        "name": "VERSION",
+        "outputs": [
+          {
+            "internalType": "string",
+            "name": "",
+            "type": "string"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "",
+            "type": "uint256"
+          }
+        ],
+        "name": "buyerDeposits",
+        "outputs": [
+          {
+            "internalType": "uint256",
+            "name": "",
+            "type": "uint256"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "uint256",
+            "name": "_txId",
+            "type": "uint256"
+          }
+        ],
+        "name": "cancelTrade",
+        "outputs": [
+          {
+            "internalType": "bool",
+            "name": "",
+            "type": "bool"
+          }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "function"
+      },
+      {
+        "inputs": [],
+        "name": "coinIdIndex",
+        "outputs": [
+          {
+            "internalType": "uint256",
+            "name": "",
+            "type": "uint256"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "uint256",
+            "name": "",
+            "type": "uint256"
+          }
+        ],
+        "name": "coins",
+        "outputs": [
+          {
+            "internalType": "uint256",
+            "name": "coinId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "string",
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "internalType": "uint256",
+            "name": "price",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint8",
+            "name": "supply",
+            "type": "uint8"
+          },
+          {
+            "internalType": "address",
+            "name": "seller",
+            "type": "address"
+          },
+          {
+            "components": [
+              {
+                "internalType": "string",
+                "name": "mintingYear",
+                "type": "string"
+              },
+              {
+                "internalType": "string",
+                "name": "material",
+                "type": "string"
+              },
+              {
+                "internalType": "string",
+                "name": "origin",
+                "type": "string"
+              },
+              {
+                "internalType": "enum MarketplaceManager.CoinStateOfUse",
+                "name": "stateOfUse",
+                "type": "uint8"
+              }
+            ],
+            "internalType": "struct MarketplaceManager.CoinFeatures",
+            "name": "features",
+            "type": "tuple"
+          },
+          {
+            "internalType": "enum MarketplaceManager.CoinStatus",
+            "name": "status",
+            "type": "uint8"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "",
+            "type": "uint256"
+          }
+        ],
+        "name": "coinsPerUser",
+        "outputs": [
+          {
+            "internalType": "uint256",
+            "name": "",
+            "type": "uint256"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "uint256",
+            "name": "_txId",
+            "type": "uint256"
+          }
+        ],
+        "name": "completeTrade",
+        "outputs": [
+          {
+            "internalType": "bool",
+            "name": "",
+            "type": "bool"
+          }
+        ],
+        "stateMutability": "payable",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "uint256",
+            "name": "_txId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bool",
+            "name": "_received",
+            "type": "bool"
+          }
+        ],
+        "name": "confirmProductReceivement",
+        "outputs": [
+          {
+            "internalType": "bool",
+            "name": "",
+            "type": "bool"
+          }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "uint256",
+            "name": "_txId",
+            "type": "uint256"
+          }
+        ],
+        "name": "confirmShipment",
+        "outputs": [
+          {
+            "internalType": "bool",
+            "name": "",
+            "type": "bool"
+          }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "uint256",
+            "name": "_id",
+            "type": "uint256"
+          }
+        ],
+        "name": "deleteCoinListing",
+        "outputs": [
+          {
+            "internalType": "bool",
+            "name": "",
+            "type": "bool"
+          }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "uint256",
+            "name": "_id",
+            "type": "uint256"
+          },
+          {
+            "internalType": "string",
+            "name": "_newMintingYear",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "_newMaterial",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "_newOrigin",
+            "type": "string"
+          },
+          {
+            "internalType": "enum MarketplaceManager.CoinStateOfUse",
+            "name": "_newStateOfUse",
+            "type": "uint8"
+          }
+        ],
+        "name": "editCoinFeatures",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "uint256",
+            "name": "_id",
+            "type": "uint256"
+          },
+          {
+            "internalType": "string",
+            "name": "_newName",
+            "type": "string"
+          },
+          {
+            "internalType": "uint256",
+            "name": "_newPrice",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint8",
+            "name": "_newSupply",
+            "type": "uint8"
+          }
+        ],
+        "name": "editCoinListing",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+      },
+      {
+        "inputs": [],
+        "name": "fee",
+        "outputs": [
+          {
+            "internalType": "uint256",
+            "name": "",
+            "type": "uint256"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "inputs": [],
+        "name": "feeAddress",
+        "outputs": [
+          {
+            "internalType": "address",
+            "name": "",
+            "type": "address"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "_user",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "_txId",
+            "type": "uint256"
+          }
+        ],
+        "name": "getBuyerDeposits",
+        "outputs": [
+          {
+            "internalType": "uint256",
+            "name": "",
+            "type": "uint256"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "uint256",
+            "name": "_coinId",
+            "type": "uint256"
+          }
+        ],
+        "name": "getCoinInfo",
+        "outputs": [
+          {
+            "components": [
+              {
+                "internalType": "uint256",
+                "name": "coinId",
+                "type": "uint256"
+              },
+              {
+                "internalType": "string",
+                "name": "name",
+                "type": "string"
+              },
+              {
+                "internalType": "uint256",
+                "name": "price",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint8",
+                "name": "supply",
+                "type": "uint8"
+              },
+              {
+                "internalType": "address",
+                "name": "seller",
+                "type": "address"
+              },
+              {
+                "components": [
+                  {
+                    "internalType": "string",
+                    "name": "mintingYear",
+                    "type": "string"
+                  },
+                  {
+                    "internalType": "string",
+                    "name": "material",
+                    "type": "string"
+                  },
+                  {
+                    "internalType": "string",
+                    "name": "origin",
+                    "type": "string"
+                  },
+                  {
+                    "internalType": "enum MarketplaceManager.CoinStateOfUse",
+                    "name": "stateOfUse",
+                    "type": "uint8"
+                  }
+                ],
+                "internalType": "struct MarketplaceManager.CoinFeatures",
+                "name": "features",
+                "type": "tuple"
+              },
+              {
+                "internalType": "enum MarketplaceManager.CoinStatus",
+                "name": "status",
+                "type": "uint8"
+              }
+            ],
+            "internalType": "struct MarketplaceManager.Coin",
+            "name": "",
+            "type": "tuple"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "_user",
+            "type": "address"
+          }
+        ],
+        "name": "getCoinInfoPerUser",
+        "outputs": [
+          {
+            "internalType": "uint256[]",
+            "name": "",
+            "type": "uint256[]"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "inputs": [],
+        "name": "getNumberOfCoinsPublished",
+        "outputs": [
+          {
+            "internalType": "uint256",
+            "name": "",
+            "type": "uint256"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "_user",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "_txId",
+            "type": "uint256"
+          }
+        ],
+        "name": "getSellerDeposits",
+        "outputs": [
+          {
+            "internalType": "uint256",
+            "name": "",
+            "type": "uint256"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "uint256",
+            "name": "_txId",
+            "type": "uint256"
+          }
+        ],
+        "name": "getTransactionInfo",
+        "outputs": [
+          {
+            "components": [
+              {
+                "internalType": "uint256",
+                "name": "id",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "coinId",
+                "type": "uint256"
+              },
+              {
+                "internalType": "address",
+                "name": "seller",
+                "type": "address"
+              },
+              {
+                "internalType": "address",
+                "name": "buyer",
+                "type": "address"
+              },
+              {
+                "internalType": "uint256",
+                "name": "sentTimestamp",
+                "type": "uint256"
+              },
+              {
+                "internalType": "enum MarketplaceManager.TransactionStatus",
+                "name": "status",
+                "type": "uint8"
+              }
+            ],
+            "internalType": "struct MarketplaceManager.Transaction",
+            "name": "",
+            "type": "tuple"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "uint256",
+            "name": "_id",
+            "type": "uint256"
+          }
+        ],
+        "name": "initTrade",
+        "outputs": [
+          {
+            "internalType": "bool",
+            "name": "",
+            "type": "bool"
+          }
+        ],
+        "stateMutability": "payable",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "string",
+            "name": "_name",
+            "type": "string"
+          },
+          {
+            "internalType": "uint256",
+            "name": "_price",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint8",
+            "name": "_supply",
+            "type": "uint8"
+          },
+          {
+            "internalType": "string",
+            "name": "_mintingYear",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "_material",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "_origin",
+            "type": "string"
+          },
+          {
+            "internalType": "enum MarketplaceManager.CoinStateOfUse",
+            "name": "_stateOfUse",
+            "type": "uint8"
+          }
+        ],
+        "name": "listCoin",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+      },
+      {
+        "inputs": [],
+        "name": "owner",
+        "outputs": [
+          {
+            "internalType": "address",
+            "name": "",
+            "type": "address"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "inputs": [],
+        "name": "renounceOwnership",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "",
+            "type": "uint256"
+          }
+        ],
+        "name": "sellerDeposits",
+        "outputs": [
+          {
+            "internalType": "uint256",
+            "name": "",
+            "type": "uint256"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "uint256",
+            "name": "_newFee",
+            "type": "uint256"
+          }
+        ],
+        "name": "setFee",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "_newFeeAddress",
+            "type": "address"
+          }
+        ],
+        "name": "setFeeAddress",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "uint256",
+            "name": "",
+            "type": "uint256"
+          }
+        ],
+        "name": "transactions",
+        "outputs": [
+          {
+            "internalType": "uint256",
+            "name": "id",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "coinId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "seller",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "buyer",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "sentTimestamp",
+            "type": "uint256"
+          },
+          {
+            "internalType": "enum MarketplaceManager.TransactionStatus",
+            "name": "status",
+            "type": "uint8"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "newOwner",
+            "type": "address"
+          }
+        ],
+        "name": "transferOwnership",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+      },
+      {
+        "inputs": [],
+        "name": "txIdIndex",
+        "outputs": [
+          {
+            "internalType": "uint256",
+            "name": "",
+            "type": "uint256"
+          }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+      },
+      {
+        "stateMutability": "payable",
+        "type": "receive"
       }
     ]
   }

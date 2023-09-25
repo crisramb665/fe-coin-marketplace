@@ -1,15 +1,28 @@
-import { IItem } from '../../interfaces'
+import { BigNumber } from 'ethers'
+import { IItem, ICoin } from '../../interfaces'
 import { NFTCard } from './NFTCard'
 
-export const NFTCardItems = (props: { items: IItem[]; message?: string; isLoading?: boolean }) => {
-  const { items, message = "NFT's not found", isLoading = false } = props
+export const NFTCardItems = (props: { items: ICoin[]; message?: string; isLoading?: boolean }) => {
+  // console.log('props', props)
+  const { items, message = 'Moneda no encontrada', isLoading = false } = props
+
+  const coins = items.map((i: ICoin) => {
+    if (Array.isArray(i) && i.length > 0) {
+      const firstElement = Number(i[0])
+      return [firstElement, ...i.slice(1)]
+    }
+
+    return i
+  }) as unknown as ICoin[]
+
+  // console.log('coins', coins)
 
   return (
     <div className="bg-gradient grid grid-cols-3 gap-12 py-8">
-      {items.length > 0
-        ? items.map((item: IItem) => (
-            <div key={item.tokenId}>
-              <NFTCard {...item} />
+      {coins.length > 0
+        ? coins.map((coin: ICoin) => (
+            <div key={coin.coinId as number}>
+              <NFTCard {...coin} />
             </div>
           ))
         : !isLoading && (

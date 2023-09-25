@@ -16,19 +16,19 @@ export const getMarketContract = async (
   return marketContract
 }
 
-export const getNFTContract = async (
-  provider: providers.Web3Provider | providers.JsonRpcProvider,
-  signer?: providers.JsonRpcSigner,
-): Promise<Contract> => {
-  const { chainId } = await provider.getNetwork()
-  const key = chainId.toString()
-  const nftAddress = NFT_CONTRACT[key].address
-  const nftAbi = NFT_CONTRACT[key].abi
-  const signerOrProvider: providers.Web3Provider | providers.JsonRpcProvider | providers.JsonRpcSigner = !signer
-    ? provider
-    : signer
-  const nftContract = new ethers.Contract(nftAddress, nftAbi, signerOrProvider)
-  return nftContract
-}
+// export const getNFTContract = async (
+//   provider: providers.Web3Provider | providers.JsonRpcProvider,
+//   signer?: providers.JsonRpcSigner,
+// ): Promise<Contract> => {
+//   const { chainId } = await provider.getNetwork()
+//   const key = chainId.toString()
+//   const nftAddress = NFT_CONTRACT[key].address
+//   const nftAbi = NFT_CONTRACT[key].abi
+//   const signerOrProvider: providers.Web3Provider | providers.JsonRpcProvider | providers.JsonRpcSigner = !signer
+//     ? provider
+//     : signer
+//   const nftContract = new ethers.Contract(nftAddress, nftAbi, signerOrProvider)
+//   return nftContract
+// }
 
 //https://matic-testnet-archive-rpc.bwarelabs.com
