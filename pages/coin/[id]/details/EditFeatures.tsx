@@ -1,23 +1,21 @@
 import Head from 'next/head'
 import Image from 'next/image'
-import React, { useContext, useEffect, useRef, useState } from 'react'
-import { ethers } from 'ethers'
-import { MarketContext } from '../context'
+import React, { useContext, useRef, useState } from 'react'
+
+import { MarketContext } from '../../../../context/marketContext'
 import { NFTStorage, File } from 'nft.storage'
 import { useRouter } from 'next/router'
 import { toast } from 'react-toastify'
-import { DATA_URL } from '../utils'
-import { TransactionProgress } from '../components/common'
-import { UploadIcon } from '@heroicons/react/solid'
-import { NFT_STORAGE_API_KEY } from '../utils/constants'
 
-const client = new NFTStorage({
-  token: NFT_STORAGE_API_KEY!,
-})
-interface CoinForm {
-  name: string
-  price: string
-  supply: string
+import { TransactionProgress } from '../../../../components/common/TransactionProgress'
+import { UploadIcon } from '@heroicons/react/solid'
+import { ICoin, getCoinInfo } from '../../../../context'
+// import { NFT_STORAGE_API_KEY } from '../utils/constants'
+
+// const client = new NFTStorage({
+//   token: NFT_STORAGE_API_KEY!,
+// })
+interface CoinFeaturesInfo {
   mintingYear: string
   material: string
   origin: string
@@ -32,19 +30,16 @@ const WalletConnect = () => {
   )
 }
 
-const Create = () => {
-  const { isConnected, marketContract, getListingFee, getNumberOfCoinsPublished } = useContext(MarketContext)
+const EditCoinListing = () => {
+  const { signer, isConnected, marketContract, getListingFee, getNumberOfCoinsPublished } = useContext(MarketContext)
   const [fileUrl, setFileUrl] = useState<string>('')
-  const [form, setForm] = useState<CoinForm>({
-    name: '',
-    price: '',
-    supply: '0',
+
+  const [form, setForm] = useState<CoinFeaturesInfo>({
     mintingYear: '',
     material: '',
     origin: '',
     stateOfUse: '',
   })
-  console.log('form', form)
 
   const [listingFee, setListingFee] = useState('0')
   const [uploading, setUploading] = useState(false)
@@ -53,6 +48,8 @@ const Create = () => {
 
   const fileInput = useRef<HTMLInputElement>(null)
   const router = useRouter()
+  const { id: coinId } = router.query
+  console.log('coinIddddd', coinId)
 
   const triggerOnChange = () => {
     if (!fileInput.current) return
@@ -91,50 +88,31 @@ const Create = () => {
   //   }
   // }
 
-  const listCoin = async () => {
-    const { name, price, supply, mintingYear, material, origin, stateOfUse } = form
-    if (!name || !price || !supply || !mintingYear || !material || !origin || !stateOfUse) {
+  const editCoinFeatutes = async () => {
+    const { mintingYear, material, origin, stateOfUse } = form
+    if (!mintingYear || !material || !origin || !stateOfUse) {
       toast.info('Todos los campos son requeridos')
       return
     }
 
     try {
-      createSale()
+      editFeatures()
     } catch (error) {
-      console.log(`error creando publicación de moneda `, error)
-      toast.error('Error al publicar.')
+      console.log(`error editando listing de la moneda `, error)
+      toast.error('Error al editar.')
     }
   }
 
-  const createSale = async () => {
+  const editFeatures = async () => {
     if (!marketContract) return
     let toastTx = toast.loading('Por favor espera...', {
+      autoClose: 3000,
       position: toast.POSITION.BOTTOM_RIGHT,
     })
     try {
       setTxWait(true)
-      // let transaction = await nftContract.createToken(fileUrl)
 
-      // let tx = await transaction.wait()
-      // toast.update(toastTx, {
-      //   render: 'Tx Ok',
-      //   type: 'success',
-      //   isLoading: false,
-      //   autoClose: 3000,
-      //   position: toast.POSITION.BOTTOM_RIGHT,
-      // })
-
-      // let event = tx.events[0]
-      // console.log('EVENT', event)
-      // let value = event.args[2]
-      // console.log('VALUE', value)
-
-      // let tokenId = value.toNumber()
-      // console.log('TOKEN-ID', tokenId)
-
-      const _name = form.name
-      const _price = ethers.utils.parseUnits(form.price, 'ether')
-      const _supply = Number(form.supply)
+      const _coinId = Number(coinId)
       const _mintingYear = form.mintingYear
       const _material = form.material
       const _origin = form.origin
@@ -144,15 +122,7 @@ const Create = () => {
         position: toast.POSITION.BOTTOM_RIGHT,
       })
       // const transaction = await marketContract.listCoin(_name, _price, _supply, { value: listingFee })
-      const transaction = await marketContract.listCoin(
-        _name,
-        _price,
-        _supply,
-        _mintingYear,
-        _material,
-        _origin,
-        _stateOfUse,
-      )
+      const transaction = await marketContract.editCoinFeatures(_coinId, _mintingYear, _material, _origin, _stateOfUse)
 
       const tx = await transaction.wait()
       toast.update(toastTx, {
@@ -176,22 +146,11 @@ const Create = () => {
     }
   }
 
-  // useEffect(() => {
-  //   console.log('market contract????', marketContract)
-  //   if (!marketContract) return
-  //   ;(async () => {
-  //     // // const fee = await getListingFee(marketContract)
-  //     // // setListingFee(fee)
-  //     // const numberOfCoinsPublished = await getNumberOfCoinsPublished(marketContract)
-  //     // console.log('numberOfCoinsPublished', numberOfCoinsPublished)
-  //   })()
-  // }, [])
-
   return (
     <div className="bg-gradient text-white">
       <Head>
-        <title>Publicar moneda</title>
-        <meta name="description" content="NFT Create" />
+        <title>Editando moneda</title>
+        <meta name="description" content="Coin Edit" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       {isConnected ? (
@@ -199,18 +158,7 @@ const Create = () => {
           <div className="w-[70%]">
             <div className="grid grid-cols-[1fr_300px] gap-24 items-center justify-center">
               <div className="flex flex-col pb-12 text-black">
-                <h2 className="text-white text-3xl text-center">Publicar moneda</h2>
-                <input
-                  placeholder="Nombre de la moneda"
-                  className="mt-8 border rounded p-4"
-                  onChange={(e) => setForm({ ...form, name: e.target.value })}
-                />
-                <input
-                  placeholder="Precio en ETH"
-                  className="mt-4 border rounded p-4"
-                  type="number"
-                  onChange={(e) => setForm({ ...form, price: e.target.value })}
-                />
+                <h2 className="text-white text-3xl text-center">Editar listing de moneda</h2>
                 <input
                   placeholder="Año de acuñación"
                   className="mt-4 border rounded p-4"
@@ -244,31 +192,17 @@ const Create = () => {
                   <option value="5">P (Estado pobre)</option>
                 </select>
 
-                {/* <input type="file" name="Asset" className="hidden" ref={fileInput} onChange={onChange} />
-                {(!imageUrl || uploading) && (
-                  <div className="my-4">
-                    <button
-                      className="p-2 bg-gradient-to-tr from-rose-400 to-rose-600 text-white rounded-md flex flex-row justify-between items-center"
-                      onClick={triggerOnChange}
-                    >
-                      <UploadIcon className="fill-white w-5 h-5" />
-                      <span>Cargar Imagen</span>
-                    </button>
-                  </div>
-                )} */}
                 {!txWait ? (
                   <button
-                    onClick={listCoin}
+                    onClick={editCoinFeatutes}
                     // onClick={() => console.log('creando listing en proceso')}
                     className="font-bold mt-4 bg-gradient-to-r from-[#1199fa] to-[#11d0fa]  rounded-md text-white  p-4 shadow-lg"
                   >
-                    Publicar
+                    Editar
                   </button>
                 ) : (
                   <TransactionProgress />
                 )}
-
-                {/* <h5 className="text-white mt-4">* Listing Price: {ethers.utils.formatEther(listingFee)} eth</h5> */}
               </div>
               {/* 
               {imageUrl ? (
@@ -304,4 +238,4 @@ const Create = () => {
   )
 }
 
-export default Create
+export default EditCoinListing

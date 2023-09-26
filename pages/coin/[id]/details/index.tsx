@@ -1,26 +1,59 @@
-import { ethers } from 'ethers'
+import { Signer, ethers } from 'ethers'
 import { NextPage } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useContext } from 'react'
+import { toast } from 'react-toastify'
 import { ExternalLinkIcon, XIcon } from '@heroicons/react/solid'
-import { Loader } from '../../../../components/common'
+import { Loader, TransactionProgress } from '../../../../components/common'
 import { generateCoin, getMarketContract, getCoinInfo, ICoin } from '../../../../context'
+import { RPC_URL } from '../../../../utils/constants'
 import { DATA_URL } from '../../../../utils'
+import { MarketContext } from '../../../../context/marketContext'
 
 const CoinDetails: NextPage = () => {
+  const { signer, marketContract } = useContext(MarketContext)
   const [coin, setCoin] = useState<ICoin | undefined>(undefined)
+  // console.log('coin awgfasf', coin)
+  const [txWait, setTxWait] = useState(false)
   const [fullImage, setFullImage] = useState(false)
   const router = useRouter()
   const { id } = router.query
   const idAsNumber = Number(id)
 
+  const goToEditListing = () => {
+    router.push(`/coin/${id}/details/EditListing`)
+  }
+
+  const gotToEditFeatures = () => {
+    router.push(`/coin/${id}/details/EditFeatures`)
+  }
+
+  const getCoinStateOfUse = (status: number): string => {
+    switch (status) {
+      case 0:
+        return 'UNC (Nunca en circulación)'
+      case 1:
+        return 'XF (Extremadamente bien conservada)'
+      case 2:
+        return 'VF (Muy bien conservada)'
+      case 3:
+        return 'F (Bien conservada)'
+      case 4:
+        return 'G (Decentemente conservada)'
+      case 5:
+        return 'PR (Pobremente conservada)'
+      default:
+        return ''
+    }
+  }
+
   useEffect(() => {
     if (id) {
       ;(async () => {
-        const provider = new ethers.providers.JsonRpcProvider(process.env.NEXT_PUBLIC_VERCEL_RPC_URL)
+        const provider = new ethers.providers.JsonRpcProvider(RPC_URL)
         const marketContract = await getMarketContract(provider)
         // const nftContract = await getNFTContract(provider)
         // const coin = await marketContract.getItemById(parseInt(id as string))
@@ -34,6 +67,61 @@ const CoinDetails: NextPage = () => {
   const getFormatDate = (unformatDate: string): string => {
     const date = new Date(parseInt(unformatDate) * 1000)
     return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`
+  }
+
+  const deleteCoinListing = async () => {
+    // const { name, price, supply } = form
+    // if (!name || !price || !supply) {
+    //   toast.info('Todos los campos son requeridos')
+    //   return
+    // }
+
+    try {
+      deleteCoin()
+    } catch (error) {
+      console.log(`error eliminando la moneda `, error)
+      toast.error('Error al eliminar.')
+    }
+  }
+
+  const deleteCoin = async () => {
+    if (!marketContract) return
+    let toastTx = toast.loading('Por favor espera...', {
+      position: toast.POSITION.BOTTOM_RIGHT,
+    })
+    try {
+      setTxWait(true)
+      
+
+      const _coinId = idAsNumber
+
+
+      toastTx = toast.loading('Por favor espera...', {
+        position: toast.POSITION.BOTTOM_RIGHT,
+      })
+      // const transaction = await marketContract.listCoin(_name, _price, _supply, { value: listingFee })
+      const transaction = await marketContract.deleteCoinListing(_coinId)
+
+      const tx = await transaction.wait()
+      toast.update(toastTx, {
+        render: 'Tx Ok',
+        type: 'success',
+        isLoading: false,
+        autoClose: 3000,
+        position: toast.POSITION.BOTTOM_RIGHT,
+      })
+
+      router.push('/dashboard')
+    } catch (error) {
+      toast.update(toastTx, {
+        render: 'Something went wrong',
+        type: 'error',
+        isLoading: false,
+        autoClose: 3000,
+        position: toast.POSITION.BOTTOM_RIGHT,
+      })
+      setTxWait(false)
+    }
   }
 
   return (
@@ -71,9 +159,7 @@ const CoinDetails: NextPage = () => {
                   <span>{coin.seller}</span> <ExternalLinkIcon className="w-5 h-5" />
                 </a>
               </h4>
-              {/* <h4 className="py-3">
-                <span className="bold text-pink-600 text-lg">Fecha de publicación:</span> {getFormatDate(coin.createAt)}
-              </h4> */}
+              
               <h4 className="py-3">
                 <span className="bold text-pink-600 text-lg">Año de acuñación:</span> {coin.features.mintingYear}
               </h4>
@@ -95,11 +181,14 @@ const CoinDetails: NextPage = () => {
               </h4> */}
 
               <h4 className="py-3">
-                <span className="bold text-pink-600 text-lg">Material:</span> {coin.status === 0 ? 'Disponible' : 'Vendida'}
+                <span className="bold text-pink-600 text-lg">Material:</span> {coin.features.material}
               </h4>
               <h4 className="py-3">
-                <span className="bold text-pink-600 text-lg">Origen:</span>{' '}
-                {ethers.BigNumber.from(coin.coinId).toNumber()}
+                <span className="bold text-pink-600 text-lg">Origen:</span> {coin.features.origin}
+              </h4>
+              <h4 className="py-3">
+                <span className="bold text-pink-600 text-lg">Estado físico:</span>{' '}
+                {getCoinStateOfUse(coin.features.stateOfUse)}
               </h4>
               {/* <h4 className="py-3">
                 <span className="bold text-pink-600 text-lg">Estado Físico:</span>{' '}
@@ -113,6 +202,33 @@ const CoinDetails: NextPage = () => {
                   {coin.image}
                 </a>
               </h4> */}
+
+              {signer && coin.seller.toLowerCase() === signer.toLowerCase() && coin.status === 0 && (
+                <div className="flex flex-col items-start">
+                  <button
+                    className="bg-gradient-to-r from-[#1199fa] to-[#11d0fa] rounded-3xl w-[200px] p-3 cursor-pointer my-3"
+                    onClick={goToEditListing}
+                  >
+                    Editar listing
+                  </button>
+                  <button
+                    className="bg-gradient-to-r from-[#1199fa] to-[#11d0fa] rounded-3xl w-[200px] p-3 cursor-pointer my-3"
+                    onClick={gotToEditFeatures}
+                  >
+                    Editar características
+                  </button>
+                  {!txWait ? (
+                    <button
+                      className="bg-gradient-to-r from-[#FF5733] to-[#FF5733] rounded-3xl w-[200px] p-3 cursor-pointer my-3"
+                      onClick={deleteCoinListing}
+                    >
+                      Eliminar publicación
+                    </button>
+                  ) : (
+                    <TransactionProgress />
+                  )}
+                </div>
+              )}
             </div>
             <div className="flex flex-col ">
               {/* <div className="w-[350px] h-[350px] cursor-pointer hover:opacity-80" onClick={() => setFullImage(true)}>

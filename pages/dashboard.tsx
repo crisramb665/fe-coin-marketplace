@@ -1,8 +1,17 @@
-import { ethers } from 'ethers'
+import { BigNumber, ethers } from 'ethers'
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import { FC, useContext, useEffect, useState } from 'react'
-import { getItems, getNFTBySeller, getSoldNFT, IItem, MarketContext } from '../context'
+import {
+  // getItems,
+  getNFTBySeller,
+  getSoldCoin,
+  ICoin,
+  IItem,
+  MarketContext,
+  getCoinsPerUser,
+  getCoinInfo,
+} from '../context'
 import { shortenAddress } from '../utils'
 import { NFTCardItems } from '../components'
 import { Loader } from '../components/common'
@@ -15,29 +24,31 @@ const NFTButtonGroup: ButtonGroupItemType[] = [
   { id: 'sale-button-2', title: 'Vendiendo', active: false },
   { id: 'shopping-button-3', title: 'Finalizadas', active: false },
 ]
-interface INFTComponent {
-  NFTs: IItem[]
+interface ICoinComponent {
+  coins: ICoin[]
   title: string
   isLoading: boolean
 }
 
-const NFTS: FC<INFTComponent> = ({ NFTs, title, isLoading }) => {
+const NFTS: FC<ICoinComponent> = ({ coins, title, isLoading }) => {
   return (
     <div>
       <h4 className="text-xl text-blue-500">{title}</h4>
-      {<NFTCardItems items={NFTs ? NFTs : []} isLoading={isLoading} />}
+      {<NFTCardItems items={coins ? coins : []} isLoading={isLoading} />}
     </div>
   )
 }
 
 const Dashboard: NextPage = () => {
   const { signer, marketContract, web3Provider, isConnected } = useContext(MarketContext)
+  // console.log('signer & marketcontract', signer, marketContract)
   const [isLoading, setIsLoading] = useState(false)
   const [nftButtons, setNftButtons] = useState<ButtonGroupItemType[]>(NFTButtonGroup)
   const [balance, setBalance] = useState<string>('0')
-  const [currentNFTItems, setCurrentNFTItems] = useState<IItem[]>([])
-  const [NFTItems, setNFTItems] = useState<IItem[]>([])
-  const [shoppingNFTItems, setShoppingNFTItems] = useState<IItem[] | null>(null)
+  const [currentCoinItems, setCurrentCoinItems] = useState<ICoin[]>([])
+  const [allCoinStatus, setAllCoinStatus] = useState<ICoin[]>([])
+  const [coinItems, setCoinItems] = useState<ICoin[]>([])
+  const [shoppingCoinItems, setShoppingCoinItems] = useState<ICoin[] | null>(null)
   const [title, setTitle] = useState('Activas')
 
   useEffect(() => {
@@ -46,21 +57,35 @@ const Dashboard: NextPage = () => {
       const bal = !signer ? '0' : await web3Provider?.getBalance(signer)
       if (bal) setBalance(parseFloat(ethers.utils.formatEther(bal)).toFixed(2))
     })()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [balance, isConnected])
 
   useEffect(() => {
-    getNFTs()
+    getCoins()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [signer, marketContract])
 
-  const getNFTs = async () => {
+  const getCoins = async () => {
     if (!marketContract || !signer) return
     try {
       setIsLoading(true)
-      const itemsBySeller = await getNFTBySeller(marketContract!)
-      const items = await getItems(marketContract, itemsBySeller)
-      setNFTItems(items)
+      const coinsBySeller = await getCoinsPerUser(marketContract, signer.toLowerCase())
+      // console.log('coins BY seler', coinsBySeller)
+      const parsedCoinPerUserValues = coinsBySeller.map((c: BigNumber) => c.toNumber())
+
+      const coins = await Promise.all(
+        parsedCoinPerUserValues.map(async (pc: number) => {
+          return await getCoinInfo(marketContract, pc)
+        }),
+      )
+
+      const coinsActive = coins.filter((coin: ICoin) => coin.status === 0)
+
+      // const coins = await getItems(marketContract, coinsBySeller)
+      setCoinItems(coinsActive)
+      setAllCoinStatus(coins)
       setIsLoading(false)
-      setCurrentNFTItems(items)
+      setCurrentCoinItems(coinsActive)
     } catch (error) {
       console.error(error)
       setIsLoading(false)
@@ -68,18 +93,32 @@ const Dashboard: NextPage = () => {
     }
   }
 
-  const getOwnerNFTs = async () => {
-    if (!marketContract) return
+  const getOwnerCoins = async () => {
+    if (!marketContract || !signer) return
     try {
-      if (!shoppingNFTItems) {
+      if (!shoppingCoinItems) {
         setIsLoading(true)
-        const itemsByOwner = await getNFTByOwner(marketContract!)
-        const items = await getItems(marketContract, itemsByOwner)
-        setShoppingNFTItems(items)
+        // const itemsByOwner = await getNFTByOwner(marketContract!)
+        // const items = await getItems(marketContract, itemsByOwner)
+
+        const coinsBySeller = await getCoinsPerUser(marketContract, signer)
+        // console.log('coins BY seler', coinsBySeller)
+        const parsedCoinPerUserValues = coinsBySeller.map((c: BigNumber) => c.toNumber())
+
+        const coins = await Promise.all(
+          parsedCoinPerUserValues.map(async (pc: number) => {
+            return await getCoinInfo(marketContract, pc)
+          }),
+        )
+
+        const coinsEnded = coins.filter((coin: ICoin) => coin.status === 2)
+        console.log('ended', coinsEnded)
+
+        setShoppingCoinItems(coinsEnded)
         setIsLoading(false)
-        setCurrentNFTItems(items)
+        setCurrentCoinItems(coinsEnded)
       } else {
-        setCurrentNFTItems(shoppingNFTItems)
+        setCurrentCoinItems(shoppingCoinItems)
       }
     } catch (error) {
       console.error(error)
@@ -89,10 +128,10 @@ const Dashboard: NextPage = () => {
   }
 
   const getMySales = () => {
-    return getSoldNFT(NFTItems)
+    return getSoldCoin(allCoinStatus)
   }
 
-  const handleButtonGroup = (item: ButtonGroupItemType) => (ev: React.MouseEvent) => {
+  const handleButtonGroup = (item: ButtonGroupItemType) => (event: React.MouseEvent) => {
     const items = nftButtons.map((i) => {
       if (item.id === i.id) {
         i.active = true
@@ -102,22 +141,23 @@ const Dashboard: NextPage = () => {
       return i
     })
     setNftButtons(items)
-    showNFT()
+    showCoin()
   }
 
-  const showNFT = () => {
+  const showCoin = () => {
     const item = nftButtons.filter((i) => i.active)[0]
     switch (item.id) {
       case 'creation-button-1':
-        setCurrentNFTItems(NFTItems)
+        setCurrentCoinItems(coinItems)
         setTitle('Activas')
         break
       case 'sale-button-2':
-        setCurrentNFTItems(getMySales())
+        setCurrentCoinItems(getMySales())
+        // getMySales()
         setTitle('Vendiendo')
         break
       default:
-        getOwnerNFTs()
+        getOwnerCoins()
         setTitle('Finalizadas')
     }
   }
@@ -152,7 +192,7 @@ const Dashboard: NextPage = () => {
             {isLoading ? (
               <Loader className="w-[200px] h-[200px]" size={300} />
             ) : (
-              <NFTS NFTs={currentNFTItems} title={title} isLoading={isLoading} />
+              <NFTS coins={currentCoinItems} title={title} isLoading={isLoading} />
             )}
           </div>
         </div>

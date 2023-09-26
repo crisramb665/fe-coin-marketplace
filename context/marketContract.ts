@@ -72,15 +72,7 @@ export const getCoins = async (marketContract: Contract, data: any[]): Promise<I
 }
 
 export const generateCoin = async (coin: ICoin, marketContract: Contract): Promise<ICoin> => {
-  // if (coin.coinId.toString() === '0') {
-  //   return defaultCoinInfo
-  // }
-  // const tokenUri = await marketContract.tokenURI(coin.tokenId)
-  // const [path, file] = tokenUri.slice(7).split('/')
-  // const ipfsUri = `https://${path}.ipfs.dweb.link/${file}`
-  // const meta = await axios.get(ipfsUri)
   const price = ethers.utils.formatUnits(coin.price, 'ether')
-  // const { name, description, image }: IMetaData = meta.data
 
   return {
     coinId: coin.coinId,
@@ -91,23 +83,10 @@ export const generateCoin = async (coin: ICoin, marketContract: Contract): Promi
     features: coin.features,
     status: coin.status,
   }
-
-  // return {
-  //   itemId: coin.itemId,
-  //   price,
-  //   tokenId: coin.tokenId,
-  //   seller: coin.seller,
-  //   owner: coin.owner,
-  //   sold: coin.sold,
-  //   image: `https://ipfs.io/ipfs/${image.slice(7)}`,
-  //   description,
-  //   name,
-  //   createAt: coin.createAt.toString(),
-  // }
 }
 
-export const getSoldNFT = (items: IItem[]): IItem[] => {
-  return items.filter((item: IItem) => item.sold)
+export const getSoldCoin = (coins: ICoin[]): ICoin[] => {
+  return coins.filter((coin: ICoin) => coin.status === 1)
 }
 
 export const buyNFT = async ({

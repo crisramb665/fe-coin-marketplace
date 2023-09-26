@@ -1,9 +1,7 @@
-import { BigNumber } from 'ethers'
 import { IItem, ICoin } from '../../interfaces'
 import { NFTCard } from './NFTCard'
 
 export const NFTCardItems = (props: { items: ICoin[]; message?: string; isLoading?: boolean }) => {
-  // console.log('props', props)
   const { items, message = 'Moneda no encontrada', isLoading = false } = props
 
   const coins = items.map((i: ICoin) => {
@@ -14,8 +12,6 @@ export const NFTCardItems = (props: { items: ICoin[]; message?: string; isLoadin
 
     return i
   }) as unknown as ICoin[]
-
-  // console.log('coins', coins)
 
   return (
     <div className="bg-gradient grid grid-cols-3 gap-12 py-8">

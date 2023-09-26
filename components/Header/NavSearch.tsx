@@ -11,13 +11,13 @@ const styles = {
 }
 
 export const NavSearch = () => {
-  const { filterNFT } = useContext(MarketContext)
+  const { filterCoin } = useContext(MarketContext)
   const [searchText, setSearchText] = useState('')
   const router = useRouter()
   const handleSearch = (event: ChangeEvent<HTMLInputElement>) => {
     if (router.pathname !== '/explore') return
     setSearchText(event.target.value)
-    filterNFT(event.target.value)
+    filterCoin(event.target.value)
   }
 
   const handleFocus = () => {

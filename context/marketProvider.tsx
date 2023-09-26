@@ -6,33 +6,33 @@ import {
   MarketContext,
   getMarketContract,
   getListingFee,
-  getItems,
+  // getItems,
   IItem,
   getNumberOfCoinsPublished,
   getCoinInfo,
   getCoinsPerUser,
+  ICoin,
 } from './index'
 import { getMarketItems, getTotalItems } from './marketContract'
 import { connect } from './walletConnection'
+import { RPC_URL } from '../utils/constants'
 interface Props {
   children: JSX.Element | JSX.Element[]
 }
 
 type InitialStateType = {
   marketContract: Contract
-  // nftContract: Contract
   account: string
   web3Provider: providers.Web3Provider
 }
 
 export const MarketProvider = ({ children }: Props) => {
   const [marketContract, setMarketContract] = useState<Contract | null>(null)
-  // const [nftContract, setNftContract] = useState<Contract | null>(null)
   const [isConnected, setIsConnected] = useState(false)
   const [web3Provider, setWeb3Provider] = useState<providers.Web3Provider | undefined>(undefined)
   const [signer, setSigner] = useState<string | undefined>(undefined)
-  const [NFTMarketItems, setNFTMarketItems] = useState<IItem[] | []>([])
-  const [NFTFilterItems, setNFTFilterItems] = useState<IItem[] | []>([])
+  const [coinMarketItems, setCoinMarketItems] = useState<ICoin[] | []>([])
+  const [coinFilterItems, setCoinFilterItems] = useState<ICoin[] | []>([])
   const [totalNFTItems, setTotalNFTItems] = useState(0)
   const [offSetNFTItems, setOffSetNFTItems] = useState(0)
 
@@ -42,11 +42,10 @@ export const MarketProvider = ({ children }: Props) => {
     window.ethereum.on('accountsChanged', async () => {
       setIsConnected(false)
       setWeb3Provider(undefined)
-      // setNftContract(null)
       setMarketContract(null)
       setSigner(undefined)
-      setNFTMarketItems([])
-      setNFTFilterItems([])
+      setCoinMarketItems([])
+      setCoinFilterItems([])
       setTotalNFTItems(0)
       setOffSetNFTItems(0)
       router.push('/')
@@ -63,22 +62,19 @@ export const MarketProvider = ({ children }: Props) => {
           return
         }
         const { chainId } = await web3Provider.getNetwork()
-        console.log('chainId mp', chainId)
         if (chainId !== 11155111) {
           window.alert('Cambia tu red a Sepolia Testnet')
           throw new Error('Cambia tu red a Sepolia Testnet')
         }
+
         const signer = web3Provider.getSigner()
-        console.log('signer', signer)
         const accounts = await signer.provider.listAccounts()
-        console.log('accounts', accounts)
         const marketContract = await getMarketContract(web3Provider, signer)
-        // const nftContract = await getNFTContract(web3Provider, signer)
+
         setInitialState({
           web3Provider,
           account: accounts[0],
           marketContract,
-          // nftContract,
         })
       } else {
         toast.info('Por favor instala Metamask!')
@@ -94,39 +90,47 @@ export const MarketProvider = ({ children }: Props) => {
     setSigner(account)
     setIsConnected(true)
     setMarketContract(marketContract)
-    // setNftContract(nftContract)
     providerEvents()
   }
 
+  const getAllCoins = async (marketContract: Contract, coinIdIndexes: number) => {
+    try {
+      const coinPromises = Array.from({ length: Number(coinIdIndexes) }, async (_, i) => {
+        return await getCoinInfo(marketContract, i)
+      })
+      const results = await Promise.all(coinPromises)
+      return results
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
   const getMarketPlaceItems = async () => {
-    const provider = new ethers.providers.JsonRpcProvider(process.env.NEXT_PUBLIC_VERCEL_RPC_URL)
+    const provider = new ethers.providers.JsonRpcProvider(RPC_URL)
     const marketContract = await getMarketContract(provider)
-    // const nftContract = await getNFTContract(provider)
+
     if (!marketContract) return
-    // if (!nftContract) return
-    const total = await getTotalItems(marketContract)
-    if (total <= NFTMarketItems.length) return
-    const nfts = await getMarketItems({
-      marketContract: marketContract,
-    })
-    // const genItems = await getItems(nftContract, nfts)
-    // await setNFTMarketItems((prev: IItem[]) => genItems)
+    const total = await getNumberOfCoinsPublished(marketContract)
+
+    if (total <= coinMarketItems.length) return
+    const allCoins = (await getAllCoins(marketContract, Number(total))) ?? ([] as ICoin[])
+    setCoinMarketItems((prev: ICoin[]) => allCoins)
   }
 
   const resetNFTtems = async () => {
-    setNFTMarketItems([])
-    setNFTFilterItems([])
+    setCoinMarketItems([])
+    setCoinFilterItems([])
     setTotalNFTItems(0)
     setOffSetNFTItems(0)
   }
 
   useEffect(() => {
-    setNFTFilterItems((prev) => NFTMarketItems)
-  }, [NFTMarketItems])
+    setCoinFilterItems((prev) => coinMarketItems)
+  }, [coinMarketItems])
 
-  const filterNFT = (searchText: string) => {
-    const filtered = NFTMarketItems.filter((nft: IItem) => nft.name.toLowerCase().includes(searchText.toLowerCase()))
-    setNFTFilterItems([...filtered])
+  const filterCoin = (searchText: string) => {
+    const filtered = coinMarketItems.filter((coin: ICoin) => coin.name.toLowerCase().includes(searchText.toLowerCase()))
+    setCoinFilterItems([...filtered])
   }
 
   return (
@@ -135,12 +139,11 @@ export const MarketProvider = ({ children }: Props) => {
         isConnected,
         web3Provider,
         signer,
-        // nftContract,
         marketContract,
-        NFTFilterItems,
+        coinFilterItems,
         totalNFTItems,
         offSetNFTItems,
-        filterNFT,
+        filterCoin,
         resetNFTtems,
         getMarketPlaceItems,
         getListingFee,

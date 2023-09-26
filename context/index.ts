@@ -5,9 +5,9 @@ export { getMarketContract } from './contract'
 export { connect } from './walletConnection'
 export {
   getListingFee,
-  getItems,
+  // getItems,
   getNFTBySeller,
-  getSoldNFT,
+  getSoldCoin,
   generateCoin,
   fetchMarketItems,
   getTotalItems,

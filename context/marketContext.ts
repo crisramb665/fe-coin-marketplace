@@ -1,4 +1,3 @@
-import { getNumberOfCoinsPublished } from './marketContract'
 import { Contract } from 'ethers'
 import { createContext } from 'react'
 import { IMarketContext, ICoin } from './index'
@@ -8,13 +7,12 @@ export const contextDefaultValues: IMarketContext = {
   isConnected: false,
   web3Provider: undefined,
   signer: undefined,
-  // nftContract: null,
   marketContract: null,
-  NFTFilterItems: [],
+  coinFilterItems: [],
   totalNFTItems: 0,
   offSetNFTItems: 0,
   getMarketPlaceItems() {},
-  filterNFT(searchText: string) {},
+  filterCoin(searchText: string) {},
   resetNFTtems() {},
   getListingFee(marketContract: Contract): Promise<string> {
     return new Promise(() => '')

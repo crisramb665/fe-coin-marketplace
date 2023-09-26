@@ -5,12 +5,11 @@ export interface IMarketContext {
   isConnected: boolean
   web3Provider: providers.Web3Provider | undefined
   signer: string | undefined
-  // nftContract: Contract | null
   marketContract: Contract | null
-  NFTFilterItems: IItem[]
+  coinFilterItems: ICoin[]
   totalNFTItems: number
   offSetNFTItems: number
-  filterNFT: (searchText: string) => void
+  filterCoin: (searchText: string) => void
   resetNFTtems: () => void
   getMarketPlaceItems: () => void
   connectWallet: () => void
