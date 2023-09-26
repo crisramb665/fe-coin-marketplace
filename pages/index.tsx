@@ -7,7 +7,7 @@ const Home: NextPage = () => {
     <div className="">
       <Head>
         <title>Marketplace</title>
-        <meta name="description" content="NFT Marketplace" />
+        <meta name="description" content="Coin Marketplace" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Hero />

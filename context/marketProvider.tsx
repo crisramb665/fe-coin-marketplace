@@ -5,9 +5,6 @@ import { toast } from 'react-toastify'
 import {
   MarketContext,
   getMarketContract,
-  getListingFee,
-  // getItems,
-  IItem,
   getNumberOfCoinsPublished,
   getNumberOfTransactions,
   getCoinInfo,
@@ -16,7 +13,7 @@ import {
   ICoin,
   ITx,
 } from './index'
-import { getMarketItems, getTotalItems } from './marketContract'
+
 import { connect } from './walletConnection'
 import { RPC_URL } from '../utils/constants'
 interface Props {
@@ -178,7 +175,6 @@ export const MarketProvider = ({ children }: Props) => {
         resetNFTtems,
         getMarketPlaceItems,
         getTransactions,
-        getListingFee,
         connectWallet,
         getNumberOfCoinsPublished,
         getCoinInfo,

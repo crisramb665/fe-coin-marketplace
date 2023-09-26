@@ -1,5 +1,5 @@
 import { BigNumber, Contract, providers } from 'ethers'
-import { IItem, ICoin, ITx } from './INFT'
+import { ICoin, ITx } from './INFT'
 
 export interface IMarketContext {
   isConnected: boolean
@@ -15,7 +15,6 @@ export interface IMarketContext {
   getMarketPlaceItems: () => void
   getTransactions: () => void
   connectWallet: () => void
-  getListingFee: (marketContract: Contract) => Promise<string>
   getNumberOfCoinsPublished: (marketContract: Contract) => Promise<number>
   getCoinInfo: (marketContract: Contract, coinId: number) => Promise<ICoin>
   getCoinsPerUser: (marketContract: Contract, user: string) => Promise<BigNumber[]>

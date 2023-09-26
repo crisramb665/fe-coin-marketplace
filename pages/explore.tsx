@@ -2,10 +2,8 @@ import { NextPage } from 'next'
 import { useContext, useEffect, useState, useMemo } from 'react'
 import { NFTCardItems } from '../components'
 import { Loader } from '../components/common'
-import { ICoin, MarketContext } from '../context'
-import { ethers, BigNumber, Contract } from 'ethers'
-import { RPC_URL } from '../utils/constants'
-import { getMarketContract, getNumberOfCoinsPublished, getCoinInfo } from '../context'
+import { MarketContext } from '../context'
+
 
 const Marketplace: NextPage = () => {
   const { coinFilterItems, getMarketPlaceItems } = useContext(MarketContext)

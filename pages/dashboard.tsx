@@ -2,21 +2,12 @@ import { BigNumber, ethers } from 'ethers'
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import { FC, useContext, useEffect, useState } from 'react'
-import {
-  // getItems,
-  getNFTBySeller,
-  getSoldCoin,
-  ICoin,
-  IItem,
-  MarketContext,
-  getCoinsPerUser,
-  getCoinInfo,
-} from '../context'
+import { getSoldCoin, ICoin, MarketContext, getCoinsPerUser, getCoinInfo } from '../context'
 import { shortenAddress } from '../utils'
 import { NFTCardItems } from '../components'
 import { Loader } from '../components/common'
 import { ButtonGroup, ButtonGroupItemType } from '../components/common/buttonGroup'
-import { getNFTByOwner } from '../context/marketContract'
+
 import { toast } from 'react-toastify'
 
 const NFTButtonGroup: ButtonGroupItemType[] = [
@@ -95,11 +86,9 @@ const Dashboard: NextPage = () => {
     try {
       if (!shoppingCoinItems) {
         setIsLoading(true)
-        // const itemsByOwner = await getNFTByOwner(marketContract!)
-        // const items = await getItems(marketContract, itemsByOwner)
 
         const coinsBySeller = await getCoinsPerUser(marketContract, signer)
-        // console.log('coins BY seler', coinsBySeller)
+
         const parsedCoinPerUserValues = coinsBySeller.map((c: BigNumber) => c.toNumber())
 
         const coins = await Promise.all(
@@ -150,7 +139,7 @@ const Dashboard: NextPage = () => {
         break
       case 'sale-button-2':
         setCurrentCoinItems(getMySales())
-        // getMySales()
+
         setTitle('Vendiendo')
         break
       default:

@@ -11,18 +11,15 @@ import { Loader, TransactionProgress } from '../../../components/common'
 import { ICoin, ITx, MarketContext, generateCoin, getMarketContract, getCoinInfo } from '../../../context'
 import { RPC_URL } from '../../../utils/constants'
 import {
-  buyNFT,
   buyCoin,
   confirmShipment,
   confirmReceivement,
   completeThisTrade,
   getCurrentFee,
 } from '../../../context/marketContract'
-import { DATA_URL } from '../../../utils'
 
 const NFTItem: NextPage = () => {
   const { signer, resetNFTtems, marketContract, getTransactions, txs } = useContext(MarketContext)
-  console.log('txs in item', txs)
   const [coin, setCoin] = useState<ICoin | undefined>(undefined)
   const [fee, setFee] = useState<number>(0)
 
@@ -72,7 +69,6 @@ const NFTItem: NextPage = () => {
         position: toast.POSITION.BOTTOM_RIGHT,
       })
       resetNFTtems()
-      // router.push('/dashboard')
     } else {
       setTxWait(false)
       toast.update(toastTx, {
@@ -109,7 +105,6 @@ const NFTItem: NextPage = () => {
         position: toast.POSITION.BOTTOM_RIGHT,
       })
       resetNFTtems()
-      // router.push('/dashboard')
     } else {
       setTxWait(false)
       toast.update(toastTx, {
@@ -146,7 +141,6 @@ const NFTItem: NextPage = () => {
         position: toast.POSITION.BOTTOM_RIGHT,
       })
       resetNFTtems()
-      // router.push('/dashboard')
     } else {
       setTxWait(false)
       toast.update(toastTx, {
@@ -204,7 +198,7 @@ const NFTItem: NextPage = () => {
 
   const getCommisionCharged = () => {
     const sellerAmount = Number(coin?.price) * (Number(fee) / 100)
-    return sellerAmount 
+    return sellerAmount
   }
 
   const getReceivedAmount = () => {
@@ -224,19 +218,7 @@ const NFTItem: NextPage = () => {
         <Loader className="w-[500px] h-[500px] mx-auto my-0 py-5" size={500} />
       ) : (
         <section className="w-[70%] mx-auto my-0 grid grid-cols-[400px_1fr] items-center justify-center">
-          <div className="w-[400px] h-[400px] cursor-pointer hover:opacity-80" onClick={() => setFullImage(true)}>
-            {/* <Image
-              unoptimized
-              src={coin!.image}
-              alt="Picture of the author"
-              className="rounded-2xl mt-4"
-              layout="responsive"
-              width={400}
-              height={400}
-              blurDataURL={DATA_URL}
-              placeholder="blur"
-            /> */}
-          </div>
+          <div className="w-[400px] h-[400px] cursor-pointer hover:opacity-80" onClick={() => setFullImage(true)}></div>
           <div className="self-start justify-center pt-[40px] pl-[50px]">
             <div className="flex flex-row"></div>
             <h2 className="text-3xl py-3">{coin.name}</h2>
@@ -308,13 +290,6 @@ const NFTItem: NextPage = () => {
                       relatedTx.status === 2 && (
                         <div className="flex items-center justify-start py-3">
                           <h4 className="text-xl px-1">¡Has recibido tu moneda! Que la disfrutes</h4>
-                          {/* <button
-                            className="bold text-xl bg-gradient-to-r from-[#1199fa] to-[#11d0fa] rounded-md w-[400px] p-4 cursor-pointer flex justify-center"
-                            onClick={() => confirmCoinReceivementSuccess(true)}
-                          >
-                            {' '}
-                            La he recibido
-                          </button> */}
                         </div>
                       )
                     )}
@@ -407,7 +382,6 @@ const NFTItem: NextPage = () => {
                 <button
                   className="bold text-xl bg-gradient-to-r from-[#1199fa] to-[#11d0fa] rounded-md w-[400px] p-4 cursor-pointer flex justify-center"
                   onClick={buyCoins}
-                  // onClick={() => console.log('tratando de comprar pero aun no funciona')}
                 >
                   Comprar
                 </button>
@@ -423,17 +397,6 @@ const NFTItem: NextPage = () => {
                   className="w-10 h-10 absolute right-[-50px] top-0 z-50 cursor-pointer hover:fill-pink-600"
                   onClick={() => setFullImage(false)}
                 />
-                {/* <Image
-                  unoptimized
-                  src={coin!.image}
-                  alt="Picture of the author"
-                  className="rounded-2xl mt-4"
-                  layout="responsive"
-                  width={800}
-                  height={800}
-                  blurDataURL={DATA_URL}
-                  placeholder="blur"
-                /> */}
               </div>
             </div>
           )}

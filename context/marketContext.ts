@@ -16,9 +16,7 @@ export const contextDefaultValues: IMarketContext = {
   getTransactions() {},
   filterCoin(searchText: string) {},
   resetNFTtems() {},
-  getListingFee(marketContract: Contract): Promise<string> {
-    return new Promise(() => '')
-  },
+
   connectWallet() {},
   getNumberOfCoinsPublished(marketContract: Contract): Promise<number> {
     return new Promise(() => 0)

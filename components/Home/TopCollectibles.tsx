@@ -1,16 +1,8 @@
-import { BigNumber, ethers, Contract } from 'ethers'
-import React, { useContext, useEffect, useState } from 'react'
+import { ethers, Contract } from 'ethers'
+import React, { useEffect, useState } from 'react'
 import { CollectiblesMenu, NFTCardItems } from '../../components'
-import {
-  fetchMarketItems,
-  // getItems,
-  getMarketContract,
-  getNumberOfCoinsPublished,
-  getCoinInfo,
-  getCoinsPerUser,
-  MarketContext,
-} from '../../context'
-import { IItem, ICoin } from '../../interfaces'
+import { getMarketContract, getNumberOfCoinsPublished, getCoinInfo } from '../../context'
+import { ICoin } from '../../interfaces'
 import { Loader } from '../common'
 import { RPC_URL } from '../../utils/constants'
 
