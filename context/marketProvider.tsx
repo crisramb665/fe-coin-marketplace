@@ -9,9 +9,12 @@ import {
   // getItems,
   IItem,
   getNumberOfCoinsPublished,
+  getNumberOfTransactions,
   getCoinInfo,
   getCoinsPerUser,
+  getTxInfo,
   ICoin,
+  ITx,
 } from './index'
 import { getMarketItems, getTotalItems } from './marketContract'
 import { connect } from './walletConnection'
@@ -33,6 +36,7 @@ export const MarketProvider = ({ children }: Props) => {
   const [signer, setSigner] = useState<string | undefined>(undefined)
   const [coinMarketItems, setCoinMarketItems] = useState<ICoin[] | []>([])
   const [coinFilterItems, setCoinFilterItems] = useState<ICoin[] | []>([])
+  const [txs, setTxs] = useState<ITx[] | []>([])
   const [totalNFTItems, setTotalNFTItems] = useState(0)
   const [offSetNFTItems, setOffSetNFTItems] = useState(0)
 
@@ -98,6 +102,7 @@ export const MarketProvider = ({ children }: Props) => {
       const coinPromises = Array.from({ length: Number(coinIdIndexes) }, async (_, i) => {
         return await getCoinInfo(marketContract, i)
       })
+
       const results = await Promise.all(coinPromises)
       return results
     } catch (error) {
@@ -114,7 +119,32 @@ export const MarketProvider = ({ children }: Props) => {
 
     if (total <= coinMarketItems.length) return
     const allCoins = (await getAllCoins(marketContract, Number(total))) ?? ([] as ICoin[])
-    setCoinMarketItems((prev: ICoin[]) => allCoins)
+    const filterActiveCoins = allCoins.filter((coin: ICoin) => coin.status !== 2)
+    setCoinMarketItems((prev: ICoin[]) => filterActiveCoins)
+  }
+
+  const getAllTxs = async (marketContract: Contract, txIdIndexes: number) => {
+    try {
+      const txPromises = Array.from({ length: Number(txIdIndexes) }, async (_, i) => {
+        return await getTxInfo(marketContract, i)
+      })
+
+      const txResult = await Promise.all(txPromises)
+      return txResult
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  const getTransactions = async () => {
+    const provider = new ethers.providers.JsonRpcProvider(RPC_URL)
+    const marketContract = await getMarketContract(provider)
+
+    if (!marketContract) return
+    const total = await getNumberOfTransactions(marketContract)
+    if (total <= txs.length) return
+    const allTxs = (await getAllTxs(marketContract, Number(total))) ?? ([] as ITx[])
+    setTxs(allTxs)
   }
 
   const resetNFTtems = async () => {
@@ -141,11 +171,13 @@ export const MarketProvider = ({ children }: Props) => {
         signer,
         marketContract,
         coinFilterItems,
+        txs,
         totalNFTItems,
         offSetNFTItems,
         filterCoin,
         resetNFTtems,
         getMarketPlaceItems,
+        getTransactions,
         getListingFee,
         connectWallet,
         getNumberOfCoinsPublished,

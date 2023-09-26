@@ -10,19 +10,6 @@ import { getMarketContract, getNumberOfCoinsPublished, getCoinInfo } from '../co
 const Marketplace: NextPage = () => {
   const { coinFilterItems, getMarketPlaceItems } = useContext(MarketContext)
   const [isLoading, setIsLoading] = useState(false)
-  // const [coins, setCoins] = useState<ICoin[] | []>([])
-
-  // const getAllCoins = async (marketContract: Contract, coinIdIndexes: number) => {
-  //   try {
-  //     const coinPromises = Array.from({ length: Number(coinIdIndexes) }, async (_, i) => {
-  //       return await getCoinInfo(marketContract, i)
-  //     })
-  //     const results = await Promise.all(coinPromises)
-  //     return results
-  //   } catch (error) {
-  //     console.error(error)
-  //   }
-  // }
 
   useEffect(() => {
     showMore()
@@ -32,24 +19,6 @@ const Marketplace: NextPage = () => {
   const showMore = async () => {
     setIsLoading(true)
     getMarketPlaceItems()
-    // const provider = new ethers.providers.JsonRpcProvider(RPC_URL)
-    // const marketContract = await getMarketContract(provider)
-    // // console.log('marketContract', marketContract)
-    // // const nftContract = await getNFTContract(provider)
-    // if (!marketContract) return
-    // // if (!nftContract) return
-    // // const [nfts] = await fetchMarketItems({ marketContract: marketContract, offSet: 0, limit: 6, solded: 0 })
-    // const numCoinsPublished = await getNumberOfCoinsPublished(marketContract)
-    // console.log('number', numCoinsPublished)
-    // const coinInfo = await getCoinInfo(marketContract, 0)
-    // // console.log('coinInfo', coinInfo)
-
-    // const allCoins = (await getAllCoins(marketContract, Number(numCoinsPublished))) ?? ([] as ICoin[])
-
-    // // console.log('all result!!', allCoins)
-
-    // // console.log('result: ', getCoinPerUserList)
-    // setCoins(allCoins)
     setIsLoading(false)
   }
 

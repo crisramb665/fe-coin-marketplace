@@ -41,8 +41,9 @@ export const TopCollectibles = () => {
         const numCoinsPublished = await getNumberOfCoinsPublished(marketContract)
 
         const allCoins = (await getAllCoins(marketContract, Number(numCoinsPublished))) ?? ([] as ICoin[])
+        const filterActiveCoins = allCoins.filter((coin: ICoin) => coin.status === 0)
 
-        setCoins(allCoins)
+        setCoins(filterActiveCoins)
         setIsLoading(false)
       } catch (error) {
         setIsLoading(false)

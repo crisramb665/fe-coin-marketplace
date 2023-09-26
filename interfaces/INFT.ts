@@ -41,3 +41,12 @@ export interface ICoin {
   features: ICoinFeatures
   status: number
 }
+
+export interface ITx {
+  id: BigNumber | number
+  coinId: BigNumber | number
+  seller: string
+  buyer: string
+  sentTimestamp: number
+  status: number
+}

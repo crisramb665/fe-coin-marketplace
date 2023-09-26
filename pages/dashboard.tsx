@@ -41,7 +41,6 @@ const NFTS: FC<ICoinComponent> = ({ coins, title, isLoading }) => {
 
 const Dashboard: NextPage = () => {
   const { signer, marketContract, web3Provider, isConnected } = useContext(MarketContext)
-  // console.log('signer & marketcontract', signer, marketContract)
   const [isLoading, setIsLoading] = useState(false)
   const [nftButtons, setNftButtons] = useState<ButtonGroupItemType[]>(NFTButtonGroup)
   const [balance, setBalance] = useState<string>('0')
@@ -70,7 +69,6 @@ const Dashboard: NextPage = () => {
     try {
       setIsLoading(true)
       const coinsBySeller = await getCoinsPerUser(marketContract, signer.toLowerCase())
-      // console.log('coins BY seler', coinsBySeller)
       const parsedCoinPerUserValues = coinsBySeller.map((c: BigNumber) => c.toNumber())
 
       const coins = await Promise.all(
@@ -81,7 +79,6 @@ const Dashboard: NextPage = () => {
 
       const coinsActive = coins.filter((coin: ICoin) => coin.status === 0)
 
-      // const coins = await getItems(marketContract, coinsBySeller)
       setCoinItems(coinsActive)
       setAllCoinStatus(coins)
       setIsLoading(false)

@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { BigNumber, Contract, ethers } from 'ethers'
-import { ICoin, ICoinFeatures, IItem, IMetaData } from '../interfaces'
+import { ICoin, ICoinFeatures, IItem, IMetaData, ITx } from '../interfaces'
 
 const defaultItem = {
   itemId: '',
@@ -143,4 +143,84 @@ export const getCoinInfo = async (marketContract: Contract, coinId: number): Pro
 export const getCoinsPerUser = async (marketContract: Contract, user: string): Promise<BigNumber[]> => {
   const coinsPerUser = await marketContract.getCoinInfoPerUser(user)
   return coinsPerUser
+}
+
+export const buyCoin = async (marketContract: Contract, coinId: number, price: BigNumber): Promise<boolean | null> => {
+  try {
+    const transaction = await marketContract.initTrade(coinId, {
+      value: price,
+    })
+
+    const tx = await transaction.wait()
+    console.log('TX purchase >>> ', tx)
+    return true
+  } catch (error) {
+    console.log('error tx ', error)
+    return null
+  }
+}
+
+export const confirmShipment = async (marketContract: Contract, txId: number): Promise<boolean | null> => {
+  try {
+    const transaction = await marketContract.confirmShipment(txId)
+    const tx = await transaction.wait()
+    console.log('TX shipment >>> ', tx)
+    return true
+  } catch (error) {
+    console.log('error tx ', error)
+    return null
+  }
+}
+
+export const confirmReceivement = async (
+  marketContract: Contract,
+  txId: number,
+  received: boolean,
+): Promise<boolean | null> => {
+  try {
+    const transaction = await marketContract.confirmProductReceivement(txId, received)
+    const tx = await transaction.wait()
+    console.log('TX confirm receivement >>> ', tx)
+    return true
+  } catch (error) {
+    console.log('error tx ', error)
+    return null
+  }
+}
+
+export const completeThisTrade = async (marketContract: Contract, txId: number): Promise<boolean | null> => {
+  try {
+    const transaction = await marketContract.completeTrade(txId, { value: 0 as unknown as BigNumber })
+    const tx = await transaction.wait()
+    console.log('TX trade completed >>> ', tx)
+    return true
+  } catch (error) {
+    console.log('error tx ', error)
+    return null
+  }
+}
+
+export const getNumberOfTransactions = async (marketContract: Contract) => {
+  const numberOfTxMade = await marketContract.txIdIndex()
+  return numberOfTxMade
+}
+
+export const getTxInfo = async (marketContract: Contract, txId: number): Promise<ITx> => {
+  const txInfo = await marketContract.getTransactionInfo(txId)
+
+  const tx: ITx = {
+    id: txInfo[0].toNumber(),
+    coinId: txInfo[1].toNumber(),
+    seller: txInfo[2],
+    buyer: txInfo[3],
+    sentTimestamp: txInfo[4],
+    status: txInfo[5],
+  }
+
+  return tx
+}
+
+export const getCurrentFee = async (marketContract: Contract): Promise<number> => {
+  const fee = await marketContract.fee()
+  return fee
 }

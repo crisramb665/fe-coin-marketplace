@@ -9,9 +9,11 @@ export const contextDefaultValues: IMarketContext = {
   signer: undefined,
   marketContract: null,
   coinFilterItems: [],
+  txs: [],
   totalNFTItems: 0,
   offSetNFTItems: 0,
   getMarketPlaceItems() {},
+  getTransactions() {},
   filterCoin(searchText: string) {},
   resetNFTtems() {},
   getListingFee(marketContract: Contract): Promise<string> {

@@ -44,7 +44,6 @@ const Create = () => {
     origin: '',
     stateOfUse: '',
   })
-  console.log('form', form)
 
   const [listingFee, setListingFee] = useState('0')
   const [uploading, setUploading] = useState(false)
