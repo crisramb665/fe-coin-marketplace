@@ -10,8 +10,8 @@ export const Footer = () => {
           <div className="flex items-center py-2">
             <MailIcon className="w-5 h-5" />
             <h5 className="px-2">
-              <a target="_blank" href="mailto:cristianrom66@gmail.com" rel="noreferrer">
-                cristianrom66@gmail.com
+              <a target="_blank" href="mailto:jahesogu@gmail.com" rel="noreferrer">
+                jahesogu@gmail.com
               </a>
             </h5>
           </div>

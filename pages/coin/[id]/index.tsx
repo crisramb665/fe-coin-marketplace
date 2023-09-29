@@ -177,7 +177,6 @@ const NFTItem: NextPage = () => {
         position: toast.POSITION.BOTTOM_RIGHT,
       })
       resetNFTtems()
-      // router.push('/dashboard')
     } else {
       setTxWait(false)
       toast.update(toastTx, {
@@ -269,11 +268,11 @@ const NFTItem: NextPage = () => {
                       </h4>
                     </div>
 
-                    {signer && relatedTx.buyer.toLowerCase() === signer.toLowerCase() && relatedTx.status === 0 ? (
+                    {signer && relatedTx.buyer === signer && relatedTx.status === 0 ? (
                       <div className="flex items-center justify-start py-3">
                         <h4 className="text-xl px-1">Tu vendedor aún no despacha tu moneda</h4>
                       </div>
-                    ) : signer && relatedTx.buyer.toLowerCase() === signer.toLowerCase() && relatedTx.status === 1 ? (
+                    ) : signer && relatedTx.buyer === signer && relatedTx.status === 1 ? (
                       <div className="flex items-center justify-start py-3">
                         <h4 className="text-xl px-1">Tu moneda está en camino</h4>
                         <button
@@ -286,7 +285,7 @@ const NFTItem: NextPage = () => {
                       </div>
                     ) : (
                       signer &&
-                      relatedTx.buyer.toLowerCase() === signer.toLowerCase() &&
+                      relatedTx.buyer === signer &&
                       relatedTx.status === 2 && (
                         <div className="flex items-center justify-start py-3">
                           <h4 className="text-xl px-1">¡Has recibido tu moneda! Que la disfrutes</h4>
@@ -328,7 +327,7 @@ const NFTItem: NextPage = () => {
                   </h4>
                 </div>
 
-                {signer && relatedTx.seller.toLowerCase() === signer.toLowerCase() && relatedTx.status === 0 ? (
+                {signer && relatedTx.seller === signer && relatedTx.status === 0 ? (
                   <div className="flex items-start justify-start py-3">
                     <h4 className="text-xl px-1">¡Despacha la moneda lo antes posible!</h4>
                     <button
@@ -339,13 +338,13 @@ const NFTItem: NextPage = () => {
                       Confirmar despacho
                     </button>
                   </div>
-                ) : signer && relatedTx.seller.toLowerCase() === signer.toLowerCase() && relatedTx.status === 1 ? (
+                ) : signer && relatedTx.seller === signer && relatedTx.status === 1 ? (
                   <div className="flex items-start justify-start py-3">
                     <h4 className="text-xl px-1">
                       Moneda en camino, espera a que tu comprador confirme que la recibió
                     </h4>
                   </div>
-                ) : signer && relatedTx.seller.toLowerCase() === signer.toLowerCase() && relatedTx.status === 2 ? (
+                ) : signer && relatedTx.seller === signer && relatedTx.status === 2 ? (
                   <div className="flex items-start justify-start py-3">
                     <h4 className="text-xl px-1">¡Tu comprador tiene su moneda!</h4>
                     <button
@@ -358,7 +357,7 @@ const NFTItem: NextPage = () => {
                   </div>
                 ) : (
                   signer &&
-                  relatedTx.seller.toLowerCase() === signer.toLowerCase() &&
+                  relatedTx.seller === signer &&
                   relatedTx.status === 3 && (
                     <div className="flex flex-col items-start justify-start py-3">
                       <h4 className="text-xl px-1">¡Venta culminada!</h4>

@@ -23,7 +23,6 @@ export const NFTCard: FC<ICoin> = (item: ICoin) => {
       <div className="w-[350px] h-[350px]"></div>
       <div className="text-[#444] h-[250px] w-[350px] p-4 relative">
         <h4 className="px-1 py-2 text-3xl bold">{name}</h4>
-        {/* <h4 className="px-1 py-3 text-2xl">$ {Number(price)} eth</h4> */}
         <h4 className="px-1 py-3 text-2xl">$ {ethers.utils.formatUnits(price, 'ether')} eth</h4>
         <div className="flex items-center justify-start py-3">
           <h4 className="px-1 py-2 text-xl bold">Vendedor: </h4>

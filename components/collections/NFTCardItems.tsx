@@ -1,4 +1,4 @@
-import { IItem, ICoin } from '../../interfaces'
+import { ICoin } from '../../interfaces'
 import { NFTCard } from './NFTCard'
 
 export const NFTCardItems = (props: { items: ICoin[]; message?: string; isLoading?: boolean }) => {
